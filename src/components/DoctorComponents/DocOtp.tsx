@@ -11,22 +11,28 @@ const DocOtp = () => {
     const [inputValue, setInputValue] = useState("")
     const navigate = useNavigate()
 
+
     useEffect(() => {
         let countdown: NodeJS.Timeout;
+
         if (expiryTime > 0) {
             countdown = setInterval(() => {
                 setExpiryTime((prevTimer) => {
+                    if (prevTimer <= 1) {
+                        clearInterval(countdown); // Clear interval when timer reaches 0
+                        localStorage.removeItem('otp-timer');
+                        return 0;
+                    }
                     const newTimer = prevTimer - 1;
                     localStorage.setItem('otp-timer', newTimer.toString());
                     return newTimer;
                 });
             }, 1000);
-
-        } else {
-            localStorage.removeItem('otp-timer');
         }
-        return () => clearInterval(countdown);
-    }, [expiryTime]);
+
+        return () => clearInterval(countdown); // Cleanup on unmount or dependency change
+    }, []); // Empty dependency array to ensure interval is set only once
+
 
 
 
@@ -37,6 +43,7 @@ const DocOtp = () => {
     };
 
     const handleResendOtp = async () => {
+        console.log("resent otp handle")
         try {
             await doctorApi.get('/resendOtp')
             toast.success("OTP sent to your email. Please check it.");

@@ -8,6 +8,12 @@ import UserOtpPage from "src/pages/userPages/UserOtpPage";
 import LoginPage from "src/pages/userPages/LoginPage"
 import DoctorRegisterPage from "src/pages/DoctorPages/DoctorRegisterPage";
 
+
+// import TrainerKyc from "@components/DoctorComponents/TrainerKyc";
+import DoctorKyc from "@components/DoctorComponents/DoctorKyc";
+
+
+
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -40,11 +46,11 @@ const appRouter = createBrowserRouter([
   {
     path: '/doctorRegister',
     element: <DoctorRegisterPage />
-},
-{
-  path:'/doctorKyc',
-  element:<Body/>
-}
+  },
+  {
+    path: '/doctorKyc',
+    element: <DoctorKyc />
+  }
 
 ]);
 
