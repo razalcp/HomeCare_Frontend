@@ -3,10 +3,19 @@ import { useFormik } from 'formik'
 import * as Yup from "yup"
 import { doctorApi } from 'src/utils/axios/axiosConfig'
 import DocOtp from './DocOtp'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+
 const DocRegister = () => {
     const [OtpStatus, setOtpStatus] = useState(false)
-    const savedTimer = localStorage.getItem('otp-timer');
+    // const savedTimer = localStorage.getItem('otp-timer');
+    let savedTimer;
+    useEffect(() => {
+        savedTimer = localStorage.getItem("otp-timer")
+        if (!OtpStatus && savedTimer) {
+            localStorage.removeItem("otp-timer")
+        }
+    }, [OtpStatus])
     const validationSchema = Yup.object({
         email: Yup.string()
             .email("Invalid email address")
@@ -24,8 +33,9 @@ const DocRegister = () => {
         validateOnBlur: true,
         onSubmit: async (values: { email: string }) => {
             try {
+                // console.log("Inside doctor register formik's onSubmit");
 
-                console.log(values);
+                // console.log(values);
                 const response: any = await doctorApi.post('/register', values)
                 setOtpStatus(true)
 
@@ -34,6 +44,8 @@ const DocRegister = () => {
             }
         }
     })
+
+
     return (
         <div id="register-body" className="bg-customBlueDoctor w-full h-screen flex">
             <div id="left-section" className="py-20 ml-36">
@@ -44,7 +56,7 @@ const DocRegister = () => {
                 <h3 className="text-white mt-6">Millions of patients are looking for the right doctor on HomeCare. Start your <br /> digital journey with HomeCare Profile </h3>
                 <p className="text-white mt-4 mb-4">Let’s take the first step and create your account:</p>
 
-                {OtpStatus|| savedTimer ? <DocOtp /> : <>       <form action="" onSubmit={formik.handleSubmit}>
+                {OtpStatus || savedTimer ? <DocOtp /> : <>       <form action="" onSubmit={formik.handleSubmit}>
                     <label htmlFor="email" className="text-white mb">Email</label><br />
                     <input value={formik.values.email}
                         onChange={formik.handleChange}
@@ -55,7 +67,7 @@ const DocRegister = () => {
                         </div>
                     )}
                     <p className="text-white mt-4 mb-4">Note: OTP will be sent to this number for verification.</p>
-                    <button className="text-white text-center  h-10 w-[25rem] bg-amber-500 rounded">Submit</button>
+                    <button type="submit" className="text-white text-center  h-10 w-[25rem] bg-amber-500 rounded">Submit</button>
 
                 </form>
                     <h6 className="text-white mt-4 text-sm">If you already have an account. Please <span className='text-amber-500 text-sm'>login</span> here.</h6></>}

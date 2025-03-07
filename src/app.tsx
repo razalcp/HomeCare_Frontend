@@ -2,14 +2,15 @@ import { Outlet } from "react-router-dom"
 import Header from "./components/UserComponents/Header"
 import Footer from './components/UserComponents/Footer'
 
+const AppLayout = () => {
 
-const AppLayout =()=>{
-
-    return(
+    return (
         <div className="App">
-            <Header/>
-            <Outlet/>
-            <Footer/>
+          
+                <Header />
+                <Outlet />
+                <Footer />
+           
         </div>
     )
 }

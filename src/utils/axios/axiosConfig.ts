@@ -9,7 +9,12 @@ const doctorApi = axios.create({
     baseURL: process.env.REACT_APP_DOCTOR_API_BASE_URL
 })
 
-export { doctorApi }
+const adminApi = axios.create({
+    baseURL: process.env.REACT_APP_ADMIN_API_BASE_URL,
+    withCredentials:true
+})
+
+export { doctorApi ,adminApi}
 
 export default userApi
 

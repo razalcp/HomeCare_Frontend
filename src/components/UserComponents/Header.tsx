@@ -1,6 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import appLogo from 'src/assets/appLogo.png';
+import { useSelector } from "react-redux";
+import profileImage from '../../../src/assets/profileImage.jpg'
+import { removeUserData } from 'src/Redux/Slice/userSlice';
+import { useDispatch } from 'react-redux';
+import userApi from 'src/utils/axios/axiosConfig';
 
 interface NavItem {
     label: string;
@@ -17,6 +22,14 @@ const navigation: NavItem[] = [
 ];
 
 const Header: React.FC = () => {
+    const dispatch = useDispatch()
+    const userInfo = useSelector((state: any) => state.user.userInfo);
+
+
+    const handleLogout = async () => {
+        await userApi.post('/userLogout');
+        dispatch(removeUserData()); // Removes user from Redux + localStorage
+    };
     return (
         <header className="w-full bg-gradient-to-r bg-customHeaderBlue shadow-2xl z-10 relative overflow-visible">
             <div className="container mx-auto px-4">
@@ -46,7 +59,7 @@ const Header: React.FC = () => {
                                 </Link>
                             ))}
                         </nav>
-                        <div className="flex items-center space-x-4">
+                        {/* <div className="flex items-center space-x-4">
                             <Link
                                 to="/signup"
                                 className="hidden sm:inline-flex items-center justify-center px-4 py-2 border border-sky-600 text-sm font-medium rounded-md text-sky-600 bg-white hover:bg-sky-50 transition-colors"
@@ -60,6 +73,28 @@ const Header: React.FC = () => {
                             >
                                 Login
                             </Link>
+                        </div> */}
+
+                        <div className="flex items-center space-x-4">
+                            {userInfo && userInfo._id ? (
+                                <button onClick={handleLogout}>Logout</button>
+                            ) : (
+                                <>
+                                    <Link
+                                        to="/signup"
+                                        className="hidden sm:inline-flex items-center justify-center px-4 py-2 border border-sky-600 text-sm font-medium rounded-md text-sky-600 bg-white hover:bg-sky-50 transition-colors"
+                                    >
+                                        Register
+                                    </Link>
+
+                                    <Link
+                                        to="/login"
+                                        className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700 transition-colors"
+                                    >
+                                        Login
+                                    </Link>
+                                </>
+                            )}
                         </div>
 
                     </div>

@@ -4,10 +4,14 @@ import * as Yup from "yup"
 import userApi from 'src/utils/axios/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-
+// import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { addUserData } from 'src/Redux/Slice/userSlice';
 
 const Login = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    // const user = useSelector((store) => store.user.userInfo)
 
     const validationSchema = Yup.object({
         email: Yup.string()
@@ -32,9 +36,12 @@ const Login = () => {
         onSubmit: async (values: { email: string, password: string }) => {
             try {
 
-                const response:any= await userApi.post('/login', values)
-                localStorage.setItem("userDetails", JSON.stringify(response.data.userData));
-                localStorage.setItem("userIsLogged", JSON.stringify(true));
+                const response: any = await userApi.post('/login', values)
+                
+
+                dispatch(addUserData(response.data.userData))
+                // localStorage.setItem("userDetails", JSON.stringify(response.data.userData));
+                // localStorage.setItem("userIsLogged", JSON.stringify(true));
 
 
                 navigate("/", { replace: true });
@@ -48,7 +55,7 @@ const Login = () => {
                 } else if (error.response && error.response.data.message === "User is blocked") {
                     toast.error("Your account has been blocked, please contact with our team.", { position: "top-center" });
                 } else {
-                    // console.error("login error => ", error);
+
                     toast.error("Something went wrong, please try again later.", { position: "top-center" });
                 }
 
@@ -75,6 +82,7 @@ const Login = () => {
             <div className="w-1/3 p-6 border border-gray-300 rounded-lg shadow-xl">
                 <h2 className="text-xl font-semibold text-center mb-5 bg-gradient-to-r from-teal-500 to-indigo-600 bg-clip-text text-transparent">Login to HomeCare</h2>
                 <form action="" className="space-y-10 flex flex-col" onSubmit={formik.handleSubmit} >
+                   
                     <input
 
                         type="text"
@@ -82,6 +90,7 @@ const Login = () => {
                         className="w-full border border-gray-300 p-2 rounded"
                         value={formik.values.email}
                         onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         name="email"
 
 
@@ -97,6 +106,7 @@ const Login = () => {
                         className="w-full border border-gray-300 p-2 rounded"
                         value={formik.values.password}
                         onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         name="password"
                     />
                     {formik.touched.password && formik.errors.password && (
@@ -104,9 +114,9 @@ const Login = () => {
                             {formik.errors.password}
                         </div>
                     )}
-                    <p className="text-sm text-neutral-500 text-center">
+                    {/* <p className="text-sm text-neutral-500 text-center">
                         Already have an account?
-                    </p>
+                    </p> */}
                     <button
                         type="submit"
                         className="w-full text-white py-2 rounded-l bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:translate-y-[-1px] transform transition-all duration-200 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-800"
@@ -116,7 +126,7 @@ const Login = () => {
                 </form>
 
                 {/* Google sign-in */}
-                <div id="google-signup" className="text-center space-y-4 mt-6">
+                {/* <div id="google-signup" className="text-center space-y-4 mt-6">
                     <p className="text-sm text-gray-400">
                         _______________________________or_________________________________
                     </p>
@@ -128,10 +138,13 @@ const Login = () => {
                         />
                         <p className="text-sm text-gray-500">You Can Sign in using Google</p>
                     </div>
-                </div>
+                </div>*/}
             </div>
         </div>
     );
 };
 
 export default Login;
+
+
+

@@ -4,10 +4,12 @@ import ReactDOM from 'react-dom/client';
 import appRouter from './routes/userRoutes';
 import { RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import store from './Redux/store';
+
 import { Toaster } from 'sonner'
 import process from 'process';
-import docAppRouter from './routes/adminRouts';
+// import docAppRouter from './routes/adminRouts';
+import appStore from './Redux/appStore'
+
 
 
 window.process = process;
@@ -19,9 +21,11 @@ const root = ReactDOM.createRoot(rootElement);
 
 root.render(
 
-   <Provider store={store}>
+   <Provider store={appStore}>
+
       <Toaster richColors />
-      
       <RouterProvider router={appRouter} />
+
    </Provider>
+
 );

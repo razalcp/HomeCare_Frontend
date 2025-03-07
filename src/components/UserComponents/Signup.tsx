@@ -56,7 +56,8 @@ const Signup = () => {
 }) => {
       try {
         if (values) {
-
+          console.log("signup try block");
+          
           localStorage.removeItem('otp-timer');
           const registrationState = await dispatch(registerUser(values))
 
@@ -185,7 +186,7 @@ const Signup = () => {
               </button>
             </form>
           </div>
-          <div id="google-signup" className="text-center space-y-4">
+          {/* <div id="google-signup" className="text-center space-y-4">
             <p className="text-sm text-gray-400">
               _______________________________or_________________________________
             </p>
@@ -199,7 +200,7 @@ const Signup = () => {
                 You Can Sign in using Google
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

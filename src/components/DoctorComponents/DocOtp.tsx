@@ -69,6 +69,7 @@ const DocOtp = () => {
     }
 
     const handleClick = async (e: any) => {
+        console.log("Button clicked ")
         try {
             e.preventDefault()
             const response = await doctorApi.post('/verifyOtp', { enteredOtp: inputValue })
@@ -84,7 +85,7 @@ const DocOtp = () => {
                 toast.error("OTP has expired.", { position: "top-center" });
             } else {
 
-                toast.error("OTP has expired.", { position: "top-center" });
+                toast.error(error.response.data.message, { position: "top-center" });
             };
         }
 
