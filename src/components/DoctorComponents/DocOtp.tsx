@@ -73,7 +73,12 @@ const DocOtp = () => {
         try {
             e.preventDefault()
             const response = await doctorApi.post('/verifyOtp', { enteredOtp: inputValue })
-            navigate('/doctorKyc', { replace: true })
+            // console.log("Inside doctor verify otp frontend",response?.data?.doctorData)
+
+
+            const doctorData = response?.data?.doctorData;
+
+            navigate('/doctorKyc', { replace: true, state: { doctorData } })
         } catch (error: any) {
             console.log(error);
 

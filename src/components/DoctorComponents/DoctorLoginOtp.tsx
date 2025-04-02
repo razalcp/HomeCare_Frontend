@@ -77,7 +77,7 @@ const DoctorLoginOtp = () => {
 
         try {
             e.preventDefault()
-            const response = await doctorApi.post('/verifyDoctorOtp', { enteredOtp: inputValue })
+            const response : any = await doctorApi.post('/verifyDoctorOtp', { enteredOtp: inputValue })
 
             const doctorData = response.data.doctorData
             // console.log("This is doctor data", doctorData);

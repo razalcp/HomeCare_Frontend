@@ -103,6 +103,8 @@
 import { useState, useEffect } from "react";
 import Notiflix from "notiflix";
 import { getPatientData, updatePatients } from "src/services/admin/adminApi";
+import { removeUserData } from "src/Redux/Slice/userSlice";
+import {useDispatch} from 'react-redux'
 
 export interface IMedicalRecords {
   fileName: string;
@@ -134,6 +136,7 @@ const BlockUnblockPatients = () => {
     getUserData();
   }, []);
 
+  const dispatch = useDispatch()
   const toggleBlock = async (buttonName: string, id: string) => {
     const action = buttonName === "Block" ? "block" : "unblock";
     const okButtonColor = action === "block" ? "#d33" : "#28a745"; // Red for block, green for unblock
@@ -145,6 +148,7 @@ const BlockUnblockPatients = () => {
       "Cancel",
       async () => {
         const update = await updatePatients(buttonName, id);
+        dispatch(removeUserData())
         setPatients((prevPatients) =>
           prevPatients.map((patient) =>
             patient._id === id ? { ...patient, isUserBlocked: !patient.isUserBlocked } : patient

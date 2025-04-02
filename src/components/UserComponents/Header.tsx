@@ -6,6 +6,7 @@ import profileImage from '../../../src/assets/profileImage.jpg'
 import { removeUserData } from 'src/Redux/Slice/userSlice';
 import { useDispatch } from 'react-redux';
 import userApi from 'src/utils/axios/axiosConfig';
+import { ShieldBan } from 'lucide-react';
 
 interface NavItem {
     label: string;
@@ -14,11 +15,11 @@ interface NavItem {
 
 const navigation: NavItem[] = [
     { label: 'Home', href: '/' },
-    { label: 'Doctors', href: '/doctors' },
-    { label: 'Patients', href: '/patients' },
+    { label: 'Find Doctors', href: '/doctors' },
+    // { label: 'Patients', href: '/patients' },
     { label: 'Pages', href: '/pages' },
     { label: 'Blogs', href: '/blogs' },
-    { label: 'Admin', href: '/admin' },
+    // { label: 'Admin', href: '/admin' },
 ];
 
 const Header: React.FC = () => {
@@ -77,7 +78,16 @@ const Header: React.FC = () => {
 
                         <div className="flex items-center space-x-4">
                             {userInfo && userInfo._id ? (
-                                <button onClick={handleLogout}>Logout</button>
+                                <button
+                                    onClick={handleLogout}
+                                    className="px-3 py-1 bg-teal-400 text-white text-sm font-medium rounded-md 
+                                     shadow hover:bg-red-700 transition duration-300 
+                                     hover:shadow-md active:scale-95 flex items-center space-x-1"
+                                >
+                                    <ShieldBan size={16} />
+                                    <span>Logout</span>
+                                </button>
+
                             ) : (
                                 <>
                                     <Link

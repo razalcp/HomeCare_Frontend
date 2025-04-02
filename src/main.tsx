@@ -9,7 +9,7 @@ import { Toaster } from 'sonner'
 import process from 'process';
 // import docAppRouter from './routes/adminRouts';
 import appStore from './Redux/appStore'
-
+import StripeProvider from './helpers/StripeProvider';
 
 
 window.process = process;
@@ -22,10 +22,12 @@ const root = ReactDOM.createRoot(rootElement);
 root.render(
 
    <Provider store={appStore}>
+      <StripeProvider>
 
-      <Toaster richColors />
-      <RouterProvider router={appRouter} />
-
+         <Toaster richColors />
+         <RouterProvider router={appRouter} />
+         
+      </StripeProvider>
    </Provider>
 
 );

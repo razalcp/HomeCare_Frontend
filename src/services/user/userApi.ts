@@ -9,4 +9,6 @@ const getVerifiedDoctors = async () => {
 
     }
 }
-export {getVerifiedDoctors}
+
+
+export { getVerifiedDoctors }

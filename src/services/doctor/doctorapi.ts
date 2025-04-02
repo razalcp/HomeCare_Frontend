@@ -32,7 +32,7 @@ const getDepartmentsServ = async () => {
 
 }
 
-const updateDoctorProfile = async (values:any) => {
+const updateDoctorProfile = async (values: any) => {
     return new Promise((resolve, reject) => {
         doctorApi.patch("/updateDoctorProfile", values, {
             headers: {
@@ -46,9 +46,41 @@ const updateDoctorProfile = async (values:any) => {
             reject(error);
         });
     });
+
+
+};
+
+
+const addDoctorSlots = async (values: any) => {
+    try {
+        // console.log("this is values", values);
+
+        const response = await doctorApi.post("/addDoctorSlots", values, {
+            headers: {
+                "Content-Type": "application/json",  // Change this if not uploading files
+            },
+        });
+
+        // console.log(response.data);
+    } catch (error) {
+        // console.error("Error adding doctor slots: this is error", error);
+        throw error
+    }
+
+
+
+};
+
+const fetchDoctorSlots = async (doctorId: string) => {
+    
+    
+    return await doctorApi.get(`/availableDoctorSlots/${doctorId}`);
 };
 
 
 
+
+
+
 export default doctorServ
-export { getDepartmentsServ, updateDoctorProfile }
+export { getDepartmentsServ, updateDoctorProfile, addDoctorSlots, fetchDoctorSlots }

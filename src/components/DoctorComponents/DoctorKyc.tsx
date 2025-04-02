@@ -12,10 +12,10 @@ import { doctorApi } from '../../utils/axios/axiosConfig'
 
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { addData } from '../../Redux/Slice/doctorSlice'
+
 import doctorServ from '../../services/doctor/doctorapi'
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react'
 import { getDepartmentsServ } from '../../services/doctor/doctorapi';
 import indianLanguages from 'src/helpers/indianLanguages';
@@ -29,12 +29,12 @@ const DoctorKyc = () => {
     const navigate = useNavigate()
     const [countryData, setCountryData] = useState([])
     const [deptData, setDeptData] = useState([]);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+    const location = useLocation();
+    const doctorData = location.state?.doctorData || {};
 
 
-    // doctorServ().then((response)=>{
-    //     console.log(response.data);
-
-    // })
     const options = [
         { value: "option1", label: "Option 1" },
         { value: "option2", label: "Option 2" },
@@ -49,9 +49,19 @@ const DoctorKyc = () => {
         name: Yup.string()
             .matches(/^[A-Za-z]+(?:\s[A-Za-z]+)?$/, "Enter a valid Name")
             .required("Name is required"),
+        // email: Yup.string()
+        //     .email("Invalid email address")
+        //     .matches(/^([a-zA-Z][a-zA-Z0-9._-]*)@(gmail\.com|yahoo\.com|outlook\.com)$/, "Invalid email format")
+        //     .required("Email is required"),
         email: Yup.string()
             .email("Invalid email address")
-            .matches(/^([a-zA-Z][a-zA-Z0-9._-]*)@(gmail\.com|yahoo\.com|outlook\.com)$/, "Invalid email format")
+            .matches(
+                /^([a-zA-Z][a-zA-Z0-9._-]*)@(gmail\.com|yahoo\.com|outlook\.com)$/,
+                "Invalid email format"
+            )
+            .test("is-registered-email", "Enter your registered email", function (value) {
+                return value === doctorData.email;
+            })
             .required("Email is required"),
         state: Yup.string().matches(/^[A-Za-z]+(?:\s[A-Za-z]+)?$/, "Enter a valid State")
             .required("State is required"),
@@ -167,6 +177,18 @@ const DoctorKyc = () => {
     });
 
     useEffect(() => {
+        if (formik.values.profileImage) {
+            const objectUrl = URL.createObjectURL(formik.values.profileImage);
+            setPreviewUrl(objectUrl);
+
+            // Cleanup: Revoke URL when component unmounts or when profileImage changes
+            return () => URL.revokeObjectURL(objectUrl);
+        } else {
+            setPreviewUrl(null);
+        }
+    }, [formik.values.profileImage]);
+
+    useEffect(() => {
         console.log("useEffect Worked");
 
         formik.resetForm({
@@ -216,13 +238,14 @@ const DoctorKyc = () => {
         <div className="border-4 border-gray-400 justify-center ml-[470px] mt-10 w-[625px] p-6">
             <div className="ml-[10.5rem] mt-4 mb-[3rem]">
                 <h1 className="ml-[17px]">Submit Your KYC Here To Continue</h1>
+
             </div>
 
             <form onSubmit={formik.handleSubmit}>
                 {/* Profile Image Section */}
                 <div className="flex flex-col items-center justify-center gap-[2rem] w-full h-[11rem]">
                     <figure className="w-[10rem] h-[10rem] object-cover rounded-full">
-                        <img src={doctorProfileImage} className="w-[10rem] h-[10rem] object-cover object-right rounded-full" alt="profile" />
+                        <img src={previewUrl || doctorProfileImage} className="w-[10rem] h-[10rem] object-cover object-right rounded-full" alt="profile" />
                     </figure>
                     <div>
                         {/* <div>
@@ -276,7 +299,7 @@ const DoctorKyc = () => {
                     <div className="ml-20 mt-[21px]">
                         <div>
                             <label htmlFor="email">
-                                Email <span className="text-xl text-amber-600">*</span>
+                                Email<span className="text-xl text-amber-600">*</span>
                             </label>
                             <InputComponent
                                 name="email"

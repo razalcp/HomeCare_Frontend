@@ -35,6 +35,11 @@ import AdminPublicRoute from "@components/AdminComponents/AdminPublicRoute";
 import AdminProtectedRoute from "@components/AdminComponents/AdminProtectedRoute";
 import DoctorPublicRoute from "@components/DoctorComponents/DoctorPublicRoute";
 import DoctorProtectedRoute from "@components/DoctorComponents/DoctorProtectedRoute";
+import DoctorAppLayout from "src/doctorApp";
+import DoctorAddSlotsPage from "src/pages/DoctorPages/DoctorAddSlotsPage";
+import AppointmentBooking from "@components/UserComponents/AppointmentBooking";
+import SuccessPage from "@components/UserComponents/SuccessPage";
+import PaymentFailedPage from "@components/UserComponents/PaymentFailedPage";
 
 const appRouter = createBrowserRouter([
   {
@@ -55,6 +60,21 @@ const appRouter = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [{ path: "", element: <UserSideDoctorDetails /> }],
       },
+      {
+        path: "/booking",
+        element: <ProtectedRoute />,
+        children: [{ path: "", element: <AppointmentBooking  /> }],
+      },
+      {
+        path: "/success",
+        element: <ProtectedRoute />,
+        children: [{ path: "", element: <SuccessPage  /> }],
+      },
+      {
+        path: "/paymentFailed",
+        element: <ProtectedRoute />,
+        children: [{ path: "", element: <PaymentFailedPage  /> }],
+      }
     ],
     errorElement: <Error />
   },
@@ -88,14 +108,30 @@ const appRouter = createBrowserRouter([
     ]
   }
   ,
+  // {
+  //   path: "/",
+  //   element: <DoctorProtectedRoute />, // Protects all nested routes
+  //   children: [
+  //     { path: "/doctorHome", element: <DoctorHomePage /> },
+  //     { path: "/doctorProfile", element: <DoctorProfilePage /> }
+  //   ]
+  // },
   {
     path: "/",
-    element: <DoctorProtectedRoute />, // Protects all nested routes
+    element: <DoctorProtectedRoute />, // Protects all doctor routes
     children: [
-      { path: "/doctorHome", element: <DoctorHomePage /> },
-      { path: "/doctorProfile", element: <DoctorProfilePage /> }
-    ]
+      {
+        path: "/", 
+        element: <DoctorAppLayout />, // Doctor layout (sidebar, header, etc.)
+        children: [
+          { path: "/doctorHome", element: <DoctorHomePage /> },
+          { path: "/doctorProfile", element: <DoctorProfilePage /> },
+          {path:'/doctorAddSlots',element:<DoctorAddSlotsPage/>}
+        ],
+      }
+    ],
   },
+  
   ////////////////////////////////Admin
   {
     path: '/adminLogin',

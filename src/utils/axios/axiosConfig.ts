@@ -6,7 +6,8 @@ const userApi = axios.create({
 })
 
 const doctorApi = axios.create({
-    baseURL: process.env.REACT_APP_DOCTOR_API_BASE_URL
+    baseURL: process.env.REACT_APP_DOCTOR_API_BASE_URL,
+    withCredentials: true
 })
 
 const adminApi = axios.create({

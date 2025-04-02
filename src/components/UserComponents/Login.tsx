@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import lockAndKey from 'src/assets/lockAndKey.png';
 import * as Yup from "yup"
 import userApi from 'src/utils/axios/axiosConfig';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 // import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -37,7 +37,7 @@ const Login = () => {
             try {
 
                 const response: any = await userApi.post('/login', values)
-                
+
 
                 dispatch(addUserData(response.data.userData))
                 // localStorage.setItem("userDetails", JSON.stringify(response.data.userData));
@@ -82,7 +82,7 @@ const Login = () => {
             <div className="w-1/3 p-6 border border-gray-300 rounded-lg shadow-xl">
                 <h2 className="text-xl font-semibold text-center mb-5 bg-gradient-to-r from-teal-500 to-indigo-600 bg-clip-text text-transparent">Login to HomeCare</h2>
                 <form action="" className="space-y-10 flex flex-col" onSubmit={formik.handleSubmit} >
-                   
+
                     <input
 
                         type="text"
@@ -123,6 +123,8 @@ const Login = () => {
                     >
                         Login
                     </button>
+                    <p className="text-sm text-neutral-500 text-center">
+                        <Link to="/signup">Register now to use our service's </Link> </p>
                 </form>
 
                 {/* Google sign-in */}

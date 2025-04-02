@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import registerUser from "src/Redux/Thunk/userApi";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "src/Redux/store";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'sonner'
 // import brain from 'src/assets/brain.jpg'
 // import robo1 from'src/assets/Robo1.jpg'
@@ -175,7 +175,7 @@ const Signup = () => {
                 )}
 
               <p className="text-sm text-neutral-500 text-center">
-                Already have an account?
+               <Link to="/login"> Already have an account?</Link>
               </p>
               <button
                 type="submit"

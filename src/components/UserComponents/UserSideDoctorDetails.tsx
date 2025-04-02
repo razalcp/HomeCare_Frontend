@@ -74,7 +74,7 @@ const UserSideDoctorDetails = () => {
 
             {/* Book Appointment Button */}
             <div className="mt-6 flex justify-center">
-                <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 shadow-md transition-all">
+                <button onClick={() => navigate("/booking",{ state: { doctorId, doctor } })} className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 shadow-md transition-all">
                     Book Appointment
                 </button>
             </div>
@@ -83,3 +83,5 @@ const UserSideDoctorDetails = () => {
 };
 
 export default UserSideDoctorDetails;
+
+
