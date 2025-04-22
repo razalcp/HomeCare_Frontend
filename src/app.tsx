@@ -5,12 +5,19 @@ import Footer from './components/UserComponents/Footer'
 const AppLayout = () => {
 
     return (
-        <div className="App">
-          
-                <Header />
+        // <div className="App">
+
+        //         <Header />
+        //         <Outlet />
+        //         <Footer />
+
+        // </div>
+        <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-1">
                 <Outlet />
-                <Footer />
-           
+            </main>
+            <Footer />
         </div>
     )
 }

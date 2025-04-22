@@ -40,6 +40,14 @@ import DoctorAddSlotsPage from "src/pages/DoctorPages/DoctorAddSlotsPage";
 import AppointmentBooking from "@components/UserComponents/AppointmentBooking";
 import SuccessPage from "@components/UserComponents/SuccessPage";
 import PaymentFailedPage from "@components/UserComponents/PaymentFailedPage";
+import BookingHistoryPage from "src/pages/userPages/BookingHistoryPage";
+import DoctorAppointments from "@components/DoctorComponents/DoctorAppointments";
+import UserWallet from "@components/UserComponents/UserWallet";
+import DoctorWallet from "@components/DoctorComponents/DoctorWallet";
+import AdminWallet from "@components/AdminComponents/AdminWallet";
+import UserProfile from "@components/UserComponents/UserProfile";
+
+
 
 const appRouter = createBrowserRouter([
   {
@@ -54,7 +62,7 @@ const appRouter = createBrowserRouter([
         path: "/doctors",
         element: <ProtectedRoute />,
         children: [{ path: "", element: <DoctorsPage /> }],
-      },   
+      },
       {
         path: "/userSideDoctorDetails",
         element: <ProtectedRoute />,
@@ -63,20 +71,39 @@ const appRouter = createBrowserRouter([
       {
         path: "/booking",
         element: <ProtectedRoute />,
-        children: [{ path: "", element: <AppointmentBooking  /> }],
+        children: [{ path: "", element: <AppointmentBooking /> }],
       },
       {
         path: "/success",
         element: <ProtectedRoute />,
-        children: [{ path: "", element: <SuccessPage  /> }],
+        children: [{ path: "", element: <SuccessPage /> }],
       },
       {
         path: "/paymentFailed",
         element: <ProtectedRoute />,
-        children: [{ path: "", element: <PaymentFailedPage  /> }],
-      }
+        children: [{ path: "", element: <PaymentFailedPage /> }],
+
+      },
+      {
+        path: "/userWallet",
+        element: <ProtectedRoute />,
+        children: [{ path: "", element: <UserWallet /> }],
+
+      },{
+        path: "//userProfile",
+        element: <ProtectedRoute />,
+        children: [{ path: "", element: <UserProfile /> }],
+
+      },
+
     ],
     errorElement: <Error />
+  },
+  {
+    path: "/bookingHistory",
+    element: <ProtectedRoute />,
+    children: [{ path: "", element: <BookingHistoryPage /> }],
+
   },
   {
     path: "/signup",
@@ -121,17 +148,19 @@ const appRouter = createBrowserRouter([
     element: <DoctorProtectedRoute />, // Protects all doctor routes
     children: [
       {
-        path: "/", 
+        path: "/",
         element: <DoctorAppLayout />, // Doctor layout (sidebar, header, etc.)
         children: [
           { path: "/doctorHome", element: <DoctorHomePage /> },
           { path: "/doctorProfile", element: <DoctorProfilePage /> },
-          {path:'/doctorAddSlots',element:<DoctorAddSlotsPage/>}
+          { path: '/doctorAddSlots', element: <DoctorAddSlotsPage /> },
+          { path: '/doctorAppointments', element: <DoctorAppointments /> },
+          { path: '/doctorWallet', element: <DoctorWallet /> }
         ],
       }
     ],
   },
-  
+
   ////////////////////////////////Admin
   {
     path: '/adminLogin',
@@ -151,6 +180,7 @@ const appRouter = createBrowserRouter([
           { path: "/doctorVerification", element: <DoctorVerification /> },
           { path: "/doctorVerificationDetails", element: <DoctorDetailsPage /> },
           { path: "/managePatients", element: <BlockUnblockPatients /> },
+          { path: "/adminWallet", element: <AdminWallet /> },
           // Add more protected routes here
         ],
       },

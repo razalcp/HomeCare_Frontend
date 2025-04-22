@@ -32,10 +32,10 @@ const SidebarLayout = () => {
   const menuItems = [
     { icon: <Home size={24} />, label: 'Dashboard', path: '/adminHome' },
     { icon: <Baby size={24} />, label: 'Doctor Verification', path: '/doctorVerification' },
-    { icon: <Users size={24} />, label: 'Doctors', path: '/manageDoctors' },
+    // { icon: <Users size={24} />, label: 'Doctors', path: '/manageDoctors' },
     { icon: <Settings size={24} />, label: 'Departments', path: '/adminDepartments' },
     { icon: <Users size={24} />, label: 'Patients', path: '/managePatients' },
-    { icon: <IndianRupee size={24} />, label: 'Doctor Payment', path: '/doctor-payment' },
+    { icon: <IndianRupee size={24} />, label: 'Wallet', path: '/adminWallet' },
     { icon: <ShieldBan size={24} />, label: 'Logout', action: 'logout' }, // Logout action
   ];
 

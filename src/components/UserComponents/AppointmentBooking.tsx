@@ -167,8 +167,19 @@ export default function AppointmentBooking() {
     fetchData();
   }, [doctorId])
 
-  const uniqueDates = [...new Set(docArray.map(slot => slot.date))]
-  const availableTimeSlots = docArray.filter(slot => slot.date === selectedDate)
+  // const uniqueDates = [...new Set(docArray.map(slot => slot.date))]
+  const uniqueDates = [...new Set(
+    docArray
+      .map(slot => slot.date)
+      .filter(date => new Date(date) >= new Date(new Date().toDateString()))
+  )]
+
+  // const availableTimeSlots = docArray.filter(slot => slot.date === selectedDate)
+  const availableTimeSlots = docArray.filter(
+    slot => slot.date === selectedDate && slot.isBooked === false
+  )
+
+
   const makePayment = async () => {
     const stripe = await loadStripe(process.env.STRIPE_PUBLISHABLE_KEY as string);
     if (!selectedDate || !selectedTime) {
@@ -200,29 +211,26 @@ export default function AppointmentBooking() {
       endTime: selectedSlot.endTime,
       selectedSlot: selectedSlot,
       userInfo: userInfo,
+      slotId: selectedSlot._id
     };
     const headers = {
       "Content-Type": "application/json"
     }
-    // const response = await fetch(`${process.env.REACT_APP_USER_API_BASE_URL}/create-checkout-session`, {
-    //   method: "POST",
-    //   headers: headers,
-    //   body: JSON.stringify(body)
-    // })
+
     const response = await userApi.post("/create-checkout-session", body, {
-      headers: headers,  // Assuming headers are already defined
-  });
-  console.log("stripe response",response?.data?.id);
-  
-   
+      headers: headers,
+    });
+    console.log("stripe response", response?.data?.id);
+
+
     // console.log("stripe session",session);
-    
-    const result= stripe?.redirectToCheckout({
-      sessionId:response?.data?.id
+
+    const result = stripe?.redirectToCheckout({
+      sessionId: response?.data?.id
     })
-    if(result?.error ){
+    if (result?.error) {
       console.log(result?.error);
-      
+
     }
 
   };

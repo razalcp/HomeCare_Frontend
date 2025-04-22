@@ -78,9 +78,17 @@ const fetchDoctorSlots = async (doctorId: string) => {
 };
 
 
+const getMyBookings = async (doctorId: string) => {
+    try {
+       const response= await doctorApi.post('/getMyBookings', { doctorId: doctorId })
+       return response.data
 
+    } catch (error) {
+        return []
+    }
+}
 
 
 
 export default doctorServ
-export { getDepartmentsServ, updateDoctorProfile, addDoctorSlots, fetchDoctorSlots }
+export { getDepartmentsServ, updateDoctorProfile, addDoctorSlots, fetchDoctorSlots ,getMyBookings}

@@ -17,8 +17,9 @@ const navigation: NavItem[] = [
     { label: 'Home', href: '/' },
     { label: 'Find Doctors', href: '/doctors' },
     // { label: 'Patients', href: '/patients' },
-    { label: 'Pages', href: '/pages' },
-    { label: 'Blogs', href: '/blogs' },
+    { label: 'Wallet', href: '/userWallet' },
+    { label: 'Profile', href: '/userProfile' },
+    {label:'My Bookings',href:'/bookingHistory'}
     // { label: 'Admin', href: '/admin' },
 ];
 

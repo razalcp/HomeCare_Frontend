@@ -52,10 +52,11 @@ export function DoctorSidebar({ className }: { className?: string }) {
     };
     const menuItems = [
         { icon: BarChart3, label: "Dashboard", href: "/doctorHome" , highlight: true },
-        { icon: ClipboardList, label: "Requests", href: "/requests" },
+        // { icon: ClipboardList, label: "Requests", href: "/requests" },
         { icon: Calendar, label: "Add Slots", href: '/doctorAddSlots' },
-        { icon: Clock, label: "Available Times", href: "/available-times"},
-        { icon: Users, label: "My Patients", href: "/patients" },
+        { icon: Clock, label: "Appointments", href: "/doctorAppointments"},
+        // { icon: Users, label: "My Patients", href: "/patients" },
+        { icon: Users, label: "My Wallet", href: "/doctorWallet" },
         { 
             icon: Settings, 
             label: "Profile Settings", 
