@@ -46,6 +46,10 @@ import UserWallet from "@components/UserComponents/UserWallet";
 import DoctorWallet from "@components/DoctorComponents/DoctorWallet";
 import AdminWallet from "@components/AdminComponents/AdminWallet";
 import UserProfile from "@components/UserComponents/UserProfile";
+import Chat from "@components/UserComponents/Chat";
+import DoctorChat from "@components/DoctorComponents/DoctorChat";
+import DoctorChatNew from "@components/DoctorComponents/DoctorChatNew";
+import UserChatNew from "@components/UserComponents/UserChatNew";
 
 
 
@@ -89,10 +93,16 @@ const appRouter = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [{ path: "", element: <UserWallet /> }],
 
-      },{
-        path: "//userProfile",
+      }, {
+        path: "/userProfile",
         element: <ProtectedRoute />,
         children: [{ path: "", element: <UserProfile /> }],
+
+      },
+      {
+        path: "/userChat",
+        element: <ProtectedRoute />,
+        children: [{ path: "", element: <UserChatNew /> }],
 
       },
 
@@ -105,6 +115,8 @@ const appRouter = createBrowserRouter([
     children: [{ path: "", element: <BookingHistoryPage /> }],
 
   },
+
+
   {
     path: "/signup",
     element: <SignUpPage />,
@@ -155,7 +167,8 @@ const appRouter = createBrowserRouter([
           { path: "/doctorProfile", element: <DoctorProfilePage /> },
           { path: '/doctorAddSlots', element: <DoctorAddSlotsPage /> },
           { path: '/doctorAppointments', element: <DoctorAppointments /> },
-          { path: '/doctorWallet', element: <DoctorWallet /> }
+          { path: '/doctorWallet', element: <DoctorWallet /> },
+          { path: '/doctorChat', element: <DoctorChatNew /> }
         ],
       }
     ],

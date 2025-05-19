@@ -28,9 +28,7 @@ const UserWallet = () => {
   useEffect(() => {
     const fetchWallet = async () => {
       try {
-        const res = await userApi.get(`/getWalletData/${userInfo._id}`);
-        console.log("wallet data",res);
-        
+        const res: any = await userApi.get(`/getWalletData/${userInfo._id}`);
         setWallet(res.data);
       } catch (err) {
         console.error('Error fetching wallet:', err);
@@ -62,7 +60,7 @@ const UserWallet = () => {
             <th className="p-2 border">Type</th>
             <th className="p-2 border">Amount</th>
             {/* <th className="p-2 border">Appointment ID</th> */}
-            <th className="p-2 border">Date</th>
+            <th className="p-2 border">Date & Time</th>
           </tr>
         </thead>
         <tbody>

@@ -138,11 +138,14 @@
 
 import { useState, useEffect } from "react"
 import { Heart } from "lucide-react"
-import { useLocation } from "react-router-dom"
-
+import { Navigate, useLocation } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { fetchDoctorSlots } from "src/services/doctor/doctorapi"
 import { loadStripe } from '@stripe/stripe-js';
 import userApi from "src/utils/axios/axiosConfig"
+import { walletBooking } from "src/services/user/userApi"
+import { toast } from "sonner"
+import Notiflix from "notiflix"
 const classNames = (...classes: (string | boolean | undefined)[]) => {
   return classes.filter(Boolean).join(" ")
 }
@@ -166,7 +169,7 @@ export default function AppointmentBooking() {
     }
     fetchData();
   }, [doctorId])
-
+  const navigate = useNavigate()
   // const uniqueDates = [...new Set(docArray.map(slot => slot.date))]
   const uniqueDates = [...new Set(
     docArray
@@ -178,6 +181,109 @@ export default function AppointmentBooking() {
   const availableTimeSlots = docArray.filter(
     slot => slot.date === selectedDate && slot.isBooked === false
   )
+
+  // const makeWalletPayment = async () => {
+  //   try {
+  //     if (!selectedDate || !selectedTime) {
+  //       console.error("Please select a date and time before proceeding to payment.");
+  //       return;
+  //     }
+  //     const userInfoString = localStorage.getItem("userInfo");
+  //     const userInfo = userInfoString ? JSON.parse(userInfoString) : null;// Get user info (modify as per your auth system)
+  //     if (!userInfo) {
+  //       console.error("User not logged in.");
+  //       return;
+  //     }
+  //     const selectedSlot = docArray.find(slot => slot.date === selectedDate && slot.startTime === selectedTime);
+  //     if (!selectedSlot) {
+  //       console.error("Selected slot not found.");
+  //       return;
+  //     }
+  //     const body = {
+  //       doctorId: doctorId,
+  //       doctorFees: doctor.consultationFee,
+  //       userId: userInfo._id,
+  //       slotId: selectedSlot._id
+  //     };
+
+  //     const response: any = await walletBooking(body as any)
+
+
+  //     if (response?.data == "Wallet Booking Successful") {
+  //       navigate('/success')
+  //     }
+  //   } catch (error: any) {
+  //     console.log(error.message);
+  //     if (error.message === 'Insufficient Wallet Balance') {
+  //       Notiflix.Notify.failure("Insufficient Wallet Balance");
+  //     }
+  //   }
+
+  // }
+
+
+  const makeWalletPayment = async () => {
+    try {
+      if (!selectedDate || !selectedTime) {
+        console.error("Please select a date and time before proceeding to payment.");
+        return;
+      }
+
+      const userInfoString = localStorage.getItem("userInfo");
+      const userInfo = userInfoString ? JSON.parse(userInfoString) : null;
+      if (!userInfo) {
+        console.error("User not logged in.");
+        return;
+      }
+
+      const selectedSlot = docArray.find(
+        slot => slot.date === selectedDate && slot.startTime === selectedTime
+      );
+      if (!selectedSlot) {
+        console.error("Selected slot not found.");
+        return;
+      }
+
+      // Show confirmation popup before proceeding
+      Notiflix.Confirm.show(
+        'Confirm Payment',
+        `Are you sure you want to pay ₹${doctor.consultationFee} to book this slot?`,
+        'Yes, Pay Now',
+        'Cancel',
+        async function okCb() {
+          // Proceed with booking
+          const body = {
+            doctorId: doctorId,
+            doctorFees: doctor.consultationFee,
+            userId: userInfo._id,
+            slotId: selectedSlot._id,
+          };
+
+          const response: any = await walletBooking(body as any);
+          console.log("response", response);
+
+          if (response?.data === "Wallet Booking Successful") {
+            Notiflix.Notify.success("Wallet Booking Successful!");
+            setTimeout(() => {
+              navigate('/success');
+            }, 1500); // 1500ms delay for user to see the toast
+          } else {
+            Notiflix.Notify.failure("Booking failed. Please try again.");
+          }
+        },
+        function cancelCb() {
+          Notiflix.Notify.info("Payment using wallet cancelled.");
+        }
+      );
+    } catch (error: any) {
+      console.log(error.message);
+      if (error.message === 'Insufficient Wallet Balance') {
+        Notiflix.Notify.failure("Insufficient Wallet Balance");
+      } else {
+        Notiflix.Notify.failure("Something went wrong. Please try again.");
+      }
+    }
+  };
 
 
   const makePayment = async () => {
@@ -220,7 +326,7 @@ export default function AppointmentBooking() {
     const response = await userApi.post("/create-checkout-session", body, {
       headers: headers,
     });
-    console.log("stripe response", response?.data?.id);
+    // console.log("stripe response", response?.data?.id);
 
 
     // console.log("stripe session",session);
@@ -311,7 +417,18 @@ export default function AppointmentBooking() {
       )}
 
       {/* Proceed Button */}
-      <div className="flex justify-end">
+      <div className="flex justify-end space-x-4">
+        <button
+          disabled={!selectedDate || !selectedTime}
+          className={classNames(
+            "py-3 px-6 rounded-lg transition-colors",
+            selectedDate && selectedTime
+              ? "bg-orange-400 hover:bg-orange-500 text-white"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          )}
+          onClick={makeWalletPayment}>
+          Pay by Wallet
+        </button>
         <button
           disabled={!selectedDate || !selectedTime}
           className={classNames(
@@ -321,9 +438,10 @@ export default function AppointmentBooking() {
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           )}
           onClick={makePayment}>
-          Proceed To Pay
+          Pay Online
         </button>
       </div>
+
     </div>
   )
 }

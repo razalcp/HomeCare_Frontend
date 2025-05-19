@@ -82,7 +82,7 @@ const Body = () => {
             {/* Hero Section */}
             <section className="w-full grid lg:grid-cols-2 gap-8 items-center py-12 md:py-20 bg-customBlue">
                 <div className="space-y-6">
-                    <h3 className="ml-28 text-green-600">Welcome to HomeCare 👏</h3>
+                    <h3 className="ml-28 text-green-600">Welcome to HomeCare👏</h3>
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight ml-28">
                         Simplified healthcare for everybody
                     </h1>

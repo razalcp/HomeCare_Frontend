@@ -72,23 +72,75 @@ const addDoctorSlots = async (values: any) => {
 };
 
 const fetchDoctorSlots = async (doctorId: string) => {
-    
-    
+
+
     return await doctorApi.get(`/availableDoctorSlots/${doctorId}`);
 };
 
 
 const getMyBookings = async (doctorId: string) => {
     try {
-       const response= await doctorApi.post('/getMyBookings', { doctorId: doctorId })
-       return response.data
+        const response = await doctorApi.post('/getMyBookings', { doctorId: doctorId })
+        return response.data
 
     } catch (error) {
         return []
     }
+};
+
+const bookedUsers = async () => {
+    try {
+        console.log("booked users frontend");
+
+        const response = await doctorApi.get('/bookedUsers')
+        return response.data
+    } catch (error) {
+
+    }
 }
+
+const sendMessage = async (messageData: any) => {
+    try {
+        const response = await doctorApi.post('/saveMessages', messageData)
+        return response.data
+    } catch (error) {
+        return error
+    }
+}
+
+const fetchMessages = async (receiverId: string, senderId: string) => {
+
+
+    try {
+        const response = await doctorApi.get('/messages', {
+            params: { receiverId, senderId }
+        })
+
+        return response.data
+    } catch (error) {
+        return error
+    }
+}
+const deleteSlot = async (slotId: string) => {
+    try {
+        const response = await doctorApi.delete(`/deleteSlot/${slotId}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
 
 
 export default doctorServ
-export { getDepartmentsServ, updateDoctorProfile, addDoctorSlots, fetchDoctorSlots ,getMyBookings}
+export {
+    getDepartmentsServ,
+    updateDoctorProfile,
+    addDoctorSlots,
+    fetchDoctorSlots,
+    getMyBookings,
+    bookedUsers,
+    sendMessage,
+    fetchMessages,
+    deleteSlot
+}

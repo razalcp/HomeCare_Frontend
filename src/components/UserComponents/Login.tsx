@@ -41,7 +41,7 @@ const Login = () => {
 
                 dispatch(addUserData(response.data.userData))
                 // localStorage.setItem("userDetails", JSON.stringify(response.data.userData));
-                // localStorage.setItem("userIsLogged", JSON.stringify(true));
+                localStorage.setItem("userIsLogged", JSON.stringify(true));
 
 
                 navigate("/", { replace: true });

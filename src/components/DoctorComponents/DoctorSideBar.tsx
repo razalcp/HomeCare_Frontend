@@ -2,16 +2,16 @@
 
 import * as React from "react"
 import {
-  BarChart3,
-  Calendar,
-  Clock,
-  ClipboardList,
-  FileText,
-  LogOut,
-  MessageCircle,
-  Settings,
-  Users,
-  AlarmClock
+    BarChart3,
+    Calendar,
+    Clock,
+    ClipboardList,
+    FileText,
+    LogOut,
+    MessageCircle,
+    Settings,
+    Users,
+    AlarmClock
 } from "lucide-react"
 import { cn } from "../../utils/utilsShard"
 import { useState, useEffect } from 'react'
@@ -21,13 +21,13 @@ import { doctorApi } from "src/utils/axios/axiosConfig";
 import { removeDoctorData } from "src/Redux/Slice/doctorSlice"
 
 type DoctorInfo = {
-  name: string;
-  degree: string;
-  medicalLicenceNumber: string;
-  profileImage: string;
-  departments: string[];
-  experience: string;
-  isVerified: boolean;
+    name: string;
+    degree: string;
+    medicalLicenceNumber: string;
+    profileImage: string;
+    departments: string[];
+    experience: string;
+    isVerified: boolean;
 }
 
 export function DoctorSidebar({ className }: { className?: string }) {
@@ -51,16 +51,18 @@ export function DoctorSidebar({ className }: { className?: string }) {
         navigate('/doctorLogin'); // Redirect to admin login page
     };
     const menuItems = [
-        { icon: BarChart3, label: "Dashboard", href: "/doctorHome" , highlight: true },
+        { icon: BarChart3, label: "Dashboard", href: "/doctorHome", highlight: true },
         // { icon: ClipboardList, label: "Requests", href: "/requests" },
         { icon: Calendar, label: "Add Slots", href: '/doctorAddSlots' },
-        { icon: Clock, label: "Appointments", href: "/doctorAppointments"},
+        { icon: Clock, label: "Appointments", href: "/doctorAppointments" },
         // { icon: Users, label: "My Patients", href: "/patients" },
         { icon: Users, label: "My Wallet", href: "/doctorWallet" },
-        { 
-            icon: Settings, 
-            label: "Profile Settings", 
-            onClick: () => navigate("/doctorProfile", { state: { doctorData } }) 
+        { icon: ClipboardList, label: "Chat", href: "/doctorChat" },
+
+        {
+            icon: Settings,
+            label: "Profile Settings",
+            onClick: () => navigate("/doctorProfile", { state: { doctorData } })
         },
         // { icon: AlarmClock, label: "Add Slots", href: "/addSlot" },
     ];
@@ -106,7 +108,7 @@ export function DoctorSidebar({ className }: { className?: string }) {
                     </div>
                     <h3 className="text-center text-lg font-bold">{doctorData.name}</h3>
                     <p className="text-center text-sm text-gray-700">{doctorData.degree}</p>
-                    
+
                     {/* License Number */}
                     <div className="mt-1 flex w-full justify-between text-xs text-gray-700">
                         <span>Licence Number</span>
@@ -142,32 +144,32 @@ export function DoctorSidebar({ className }: { className?: string }) {
             </div>
 
 
-<nav className="mt-4 flex-1 space-y-1 px-4">
-    {menuItems.map((item, index) => {
-        const isActive = activeItem === item.href; // Check if the item is active
+            <nav className="mt-4 flex-1 space-y-1 px-4">
+                {menuItems.map((item, index) => {
+                    const isActive = activeItem === item.href; // Check if the item is active
 
-        return (
-            <button
-                key={index}
-                onClick={() => {
-                    setActiveItem(item.href); // Update active state
-                    if (item.onClick) {
-                        item.onClick();
-                    } else {
-                        navigate(item.href);
-                    }
-                }}
-                className={cn(
-                    "flex w-full items-center space-x-3 rounded-md px-4 py-3 text-sm font-medium text-left",
-                    isActive ? "bg-green-500 text-white" : "bg-gray-300 text-gray-800 hover:bg-gray-400"
-                )}
-            >
-                <item.icon className="h-5 w-5" />
-                <span>{item.label}</span>
-            </button>
-        );
-    })}
-</nav>
+                    return (
+                        <button
+                            key={index}
+                            onClick={() => {
+                                setActiveItem(item.href); // Update active state
+                                if (item.onClick) {
+                                    item.onClick();
+                                } else {
+                                    navigate(item.href);
+                                }
+                            }}
+                            className={cn(
+                                "flex w-full items-center space-x-3 rounded-md px-4 py-3 text-sm font-medium text-left",
+                                isActive ? "bg-green-500 text-white" : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+                            )}
+                        >
+                            <item.icon className="h-5 w-5" />
+                            <span>{item.label}</span>
+                        </button>
+                    );
+                })}
+            </nav>
 
 
 

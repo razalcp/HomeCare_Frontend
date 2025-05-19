@@ -8,7 +8,7 @@ export default function SuccessPage() {
 
 
   useEffect(() => {
-    console.log("use effect worked");
+ 
 
     const query = new URLSearchParams(location.search);
     const slotId = query.get("slotId");

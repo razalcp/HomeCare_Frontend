@@ -10,6 +10,7 @@ import process from 'process';
 // import docAppRouter from './routes/adminRouts';
 import appStore from './Redux/appStore'
 import StripeProvider from './helpers/StripeProvider';
+import { SocketProvider } from './context/socketContext';
 
 
 window.process = process;
@@ -25,7 +26,9 @@ root.render(
       <StripeProvider>
 
          <Toaster richColors />
+         <SocketProvider>   
          <RouterProvider router={appRouter} />
+         </SocketProvider>
          
       </StripeProvider>
    </Provider>

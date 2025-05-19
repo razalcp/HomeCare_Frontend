@@ -19,8 +19,8 @@ const navigation: NavItem[] = [
     // { label: 'Patients', href: '/patients' },
     { label: 'Wallet', href: '/userWallet' },
     { label: 'Profile', href: '/userProfile' },
-    {label:'My Bookings',href:'/bookingHistory'}
-    // { label: 'Admin', href: '/admin' },
+    {label:'My Bookings',href:'/bookingHistory'},
+    { label: 'Chat', href: '/userChat' },
 ];
 
 const Header: React.FC = () => {
