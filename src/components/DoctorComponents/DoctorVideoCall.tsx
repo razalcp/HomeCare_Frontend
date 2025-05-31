@@ -2,7 +2,7 @@ import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 import { useSelector, useDispatch } from "react-redux";
 
 import { useEffect, useRef } from "react";
-import { setRoomId, setShowVideoCall, setVideoCall } from "../../Redux/Slice/doctorSlice"
+import { setPrescription, setRoomId, setShowVideoCall, setVideoCall } from "../../Redux/Slice/doctorSlice"
 import { useSocket } from "src/context/socketContext";
 
 function DoctorVideoCall() {
@@ -16,12 +16,12 @@ function DoctorVideoCall() {
     useEffect(() => {
         if (!roomIdDoctor) return;
 
-        const appId = 936106089
-        const serverSecret = "8949905a29d7e175f63f2cf55aec33dd";
+        const appId = parseInt(process.env.ZEGO_CLOUD_APP_ID!)
+        const serverSecret = process.env.ZEGO_CLOUD_SERVER_SECRET;
 
         const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
             appId,
-            serverSecret,
+            serverSecret!,
             roomIdDoctor.toString(),
             Date.now().toString(),
             "Doctor"
@@ -51,7 +51,7 @@ function DoctorVideoCall() {
                 }
 
                 // Reset state on leave
-                // dispatch(setPrescription(true))
+                dispatch(setPrescription(true))
                 dispatch(setShowVideoCall(false));
                 dispatch(setRoomId(null));
                 dispatch(setVideoCall(null));

@@ -7,29 +7,33 @@ import { useDispatch } from 'react-redux'
 import { MdCallEnd } from "react-icons/md"
 import { useSocket } from "src/context/socketContext";
 import { endCallUser, setRoomIdUser, setShowVideoCallUser } from 'src/Redux/Slice/userSlice';
+import { toast } from 'sonner';
+// import { endCallDoctor } from 'src/Redux/Slice/doctorSlice';
 
 function IncomingVideocall() {
-    const { showIncomingVideoCall } = useSelector((state: any) => state.user)
+    const { showIncomingVideoCall, showVideoCallUser } = useSelector((state: any) => state.user)
     const dispatch = useDispatch()
     const { createSocket, socket } = useSocket()
 
     const handleEndCall = async () => {
         if (!showIncomingVideoCall) {
-          console.error("No incoming call to end.");
-          return;
+            console.error("No incoming call to end.");
+            return;
         }
-        await socket?.emit("reject-call", {            
-          to: showIncomingVideoCall._id,
-          sender: "user",
-          name: showIncomingVideoCall.doctorName,
+        await socket?.emit("reject-call", {
+            to: showIncomingVideoCall.doctorId,
+            sender: showIncomingVideoCall._id,
+            name: showIncomingVideoCall.doctorName,
         });
-        dispatch(endCallUser());
+        await dispatch(endCallUser());
+        // await dispatch(endCallDoctor())
+        if (!showVideoCallUser) toast.error("call ended")
     };
     const handleAcceptCall = async () => {
-     
+
         if (!showIncomingVideoCall) {
-          console.error("No incoming call to accept.");
-          return;
+            console.error("No incoming call to accept.");
+            return;
         }
         // console.log('Emitting accept-incoming-call with data:', {
         //   to: showIncomingVideoCall._id,
@@ -38,11 +42,11 @@ function IncomingVideocall() {
         // });
 
         socket?.emit("accept-incoming-call", {
-          to: showIncomingVideoCall._id,
-          from: showIncomingVideoCall.doctorId,
-          roomId: showIncomingVideoCall.roomId,
+            to: showIncomingVideoCall._id,
+            from: showIncomingVideoCall.doctorId,
+            roomId: showIncomingVideoCall.roomId,
         });
-        
+
         dispatch(setRoomIdUser(showIncomingVideoCall.roomId));
         dispatch(setShowVideoCallUser(true));
     };

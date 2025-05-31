@@ -95,7 +95,7 @@ const bookedUsers = async () => {
         const response = await doctorApi.get('/bookedUsers')
         return response.data
     } catch (error) {
-
+        return error
     }
 }
 
@@ -130,7 +130,27 @@ const deleteSlot = async (slotId: string) => {
     }
 };
 
+const savePrescription = async (presData: any) => {
+    try {
+        const response = await doctorApi.post('/savePrescription', presData)
+        return response
+    } catch (error) {
+        throw error
+    }
+}
 
+const findDoctorDashboard = async (doctorId: string) => {
+    try {
+
+        
+        const response = await doctorApi.get('/doctorDashBoard', { params: { doctorId } })
+        console.log("This is response",response);
+        
+        return response
+    } catch (error) {
+        throw error
+    }
+}
 
 export default doctorServ
 export {
@@ -142,5 +162,7 @@ export {
     bookedUsers,
     sendMessage,
     fetchMessages,
-    deleteSlot
+    deleteSlot,
+    savePrescription,
+     findDoctorDashboard 
 }

@@ -10,6 +10,7 @@ const initialState = {
         _id: "",
         callType: "",
         doctorName: "",
+        doctorId:"",
         doctorImage: '',
         roomId: null,
     },

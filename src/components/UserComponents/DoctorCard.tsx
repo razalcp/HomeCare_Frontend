@@ -360,7 +360,7 @@ const DoctorCard = () => {
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState([0, 5000]);
 
-  const doctorsPerPage = 5;
+  const doctorsPerPage = 8;
   const navigate = useNavigate();
 
   useEffect(() => {

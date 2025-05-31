@@ -1,4 +1,4 @@
-import userApi from "src/utils/axios/axiosConfig";
+import userApi, { doctorApi } from "src/utils/axios/axiosConfig";
 
 
 const getVerifiedDoctors = async () => {
@@ -133,14 +133,52 @@ const walletBooking = async (body: any) => {
     }
 }
 
+const getPrescription = async (bookingId: string) => {
+    try {
+        const presData = await doctorApi.get('/prescription', {
+            params: { bookingId }
+        })
+        return presData.data
+
+    } catch (error) {
+        return error
+    }
+
+};
 
 
+const submitReview = async (reviewData: any) => {
+    try {
+        // console.log("serv",reviewData);
 
+        const response = await userApi.post('/submitReview', reviewData)
+        return response
+    } catch (error: any) {
+
+        throw error
+
+
+    }
+};
+
+const findReviewData = async (doctorId: string) => {
+    
+
+    try {
+        const response = await userApi.get('/reviewDetails', {
+            params: { doctorId }
+        })    
+        return response
+    } catch (error) {
+        throw error
+    }
+
+}
 
 
 
 export {
     getVerifiedDoctors, saveBooking, getUserBookings, updateUserProfile,
     bookedDoctors, fetchMessages, sendMessage, uploadToCloudinary, deleteMessage,
-    walletBooking
+    walletBooking, getPrescription, submitReview, findReviewData
 }

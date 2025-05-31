@@ -70,15 +70,22 @@ const getPatientData = async () => {
     throw error
   }
 }
-const updatePatients= async (buttonName:String, id:string) => {
+const updatePatients = async (buttonName: String, id: string) => {
   try {
-    const updateisUserBlocked = await adminApi.patch('/updateIsBlocked',{buttonName, id})
+    const updateisUserBlocked = await adminApi.patch('/updateIsBlocked', { buttonName, id })
     return updateisUserBlocked
   } catch (error) {
     throw error
   }
 }
-
+const getDashBoardData = async () => {
+  try {
+    const dashboardData = await adminApi.get('/dashBoardData')
+    return dashboardData
+  } catch (error) {
+    throw error
+  }
+}
 export {
   adminAuthServ,
   adminDepartmentServ,
@@ -87,5 +94,6 @@ export {
   getDoctors,
   updateKycStatus,
   getPatientData,
-  updatePatients
+  updatePatients,
+  getDashBoardData
 }

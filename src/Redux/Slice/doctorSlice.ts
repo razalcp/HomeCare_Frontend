@@ -20,6 +20,7 @@ interface DoctorState {
   videoCall: VideoCallPayload | null;
   showVideoCallDoctor: boolean,
   roomIdDoctor: null,
+  showPrescription: boolean
 }
 const initialState: DoctorState = {
   doctorInfo: storedDoctor ? JSON.parse(storedDoctor) : null,
@@ -27,6 +28,7 @@ const initialState: DoctorState = {
 
   showVideoCallDoctor: false,
   roomIdDoctor: null,
+  showPrescription: false
 };
 
 const doctorSlice = createSlice({
@@ -57,13 +59,16 @@ const doctorSlice = createSlice({
       console.log('showVideoCall Doctor slice', state.showVideoCallDoctor);
 
     },
-     setRoomId(state, action: PayloadAction<string | null>) {
+     setRoomId(state:any, action: PayloadAction<string | null>) {
       state.roomIdDoctor = action.payload;
       console.log('roomIdDoctor slice', state.roomIdDoctor);
       
     },
+     setPrescription(state, action: PayloadAction<boolean>) {
+      state.showPrescription = action.payload
+    },
   },
 });
 
-export const { addDoctorData, removeDoctorData, setVideoCall, endCallDoctor, setShowVideoCall,setRoomId } = doctorSlice.actions;
+export const { addDoctorData, removeDoctorData, setVideoCall, endCallDoctor, setShowVideoCall,setRoomId,setPrescription } = doctorSlice.actions;
 export default doctorSlice.reducer;

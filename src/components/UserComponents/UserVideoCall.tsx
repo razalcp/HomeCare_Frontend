@@ -2,7 +2,7 @@ import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 import { useSelector, useDispatch } from "react-redux";
 
 import { useEffect, useRef } from "react";
-import {  setRoomIdUser, setShowIncomingVideoCall, setShowVideoCallUser} from '../../Redux/Slice/userSlice'
+import { setRoomIdUser, setShowIncomingVideoCall, setShowVideoCallUser } from '../../Redux/Slice/userSlice'
 import { useSocket } from "src/context/socketContext";
 import { setVideoCallUser } from "src/Redux/Slice/userSlice";
 
@@ -10,7 +10,7 @@ import { setVideoCallUser } from "src/Redux/Slice/userSlice";
 function UserVideoCall() {
   const videoCallRef = useRef<HTMLDivElement | null>(null);
   const { roomIdUser, showIncomingVideoCall, videoCall } = useSelector(
-    (state:any) => state.user
+    (state: any) => state.user
   );
   let { socket } = useSocket();
   const dispatch = useDispatch();
@@ -23,13 +23,13 @@ function UserVideoCall() {
   useEffect(() => {
     if (!roomIdUser) return;
 
-   const appId = 936106089
-        const serverSecret = "8949905a29d7e175f63f2cf55aec33dd";
+    const appId = parseInt(process.env.ZEGO_CLOUD_APP_ID!)
+    const serverSecret = process.env.ZEGO_CLOUD_SERVER_SECRET;
 
 
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
       appId,
-      serverSecret,
+      serverSecret!,
       roomIdUser.toString(),
       Date.now().toString(),
       "User"

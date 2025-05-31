@@ -5,10 +5,11 @@ import { useSocket } from "src/context/socketContext";
 import { useDispatch } from "react-redux";
 import { MdCallEnd } from "react-icons/md";
 import { endCallDoctor } from "src/Redux/Slice/doctorSlice";
+import { toast } from "sonner";
 // import { endCallTrainer } from "../../features/trainer/trainerSlice";
 
 function OutgoingVideocall() {
-    const { videoCall, doctorInfo } = useSelector(
+    const { videoCall, doctorInfo ,showVideoCallDoctor} = useSelector(
         (state: any) => state.doctor
     );
     // const parsedDoctor = JSON.parse(doctorInfo);
@@ -60,7 +61,8 @@ function OutgoingVideocall() {
             from: doctorInfo.name,
             sneder: doctorInfo.id,
         });
-        dispatch(endCallDoctor());
+       await dispatch(endCallDoctor());
+       if(   !showVideoCallDoctor )toast.error("call ended")
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }

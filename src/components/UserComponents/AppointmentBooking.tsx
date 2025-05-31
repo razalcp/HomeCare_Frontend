@@ -260,7 +260,7 @@ export default function AppointmentBooking() {
           };
 
           const response: any = await walletBooking(body as any);
-          console.log("response", response);
+          // console.log("response", response);
 
           if (response?.data === "Wallet Booking Successful") {
             Notiflix.Notify.success("Wallet Booking Successful!");
