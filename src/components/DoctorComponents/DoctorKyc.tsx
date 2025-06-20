@@ -1,8 +1,8 @@
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import InputComponent from "@components/DoctorComponents/InputComponent";
-import KycDropDown from "@components/DoctorComponents/KycDropDownComponentMultipleSelection";
+import InputComponent from "../DoctorComponents/InputComponent"
+import KycDropDown from "../DoctorComponents/KycDropDownComponentMultipleSelection"
 import { useRef } from "react";
 import doctorProfileImage from 'src/assets/female-doctor-hospital-with-stethoscope_profile-image.jpg';
 import { GiCloudUpload } from "react-icons/gi";
@@ -27,7 +27,58 @@ const DoctorKyc = () => {
     const inputRef = useRef(null);
     const doctor = useSelector((store) => store.doctor)
     const navigate = useNavigate()
-    const [countryData, setCountryData] = useState([])
+    const [countryData, setCountryData] = useState([
+        "United States",
+        "Canada",
+        "Mexico",
+        "Brazil",
+        "Argentina",
+        "United Kingdom",
+        "France",
+        "Germany",
+        "Italy",
+        "Spain",
+        "Russia",
+        "China",
+        "India",
+        "Japan",
+        "South Korea",
+        "Australia",
+        "New Zealand",
+        "South Africa",
+        "Egypt",
+        "Nigeria",
+        "Kenya",
+        "Saudi Arabia",
+        "United Arab Emirates",
+        "Turkey",
+        "Iran",
+        "Pakistan",
+        "Bangladesh",
+        "Indonesia",
+        "Vietnam",
+        "Thailand",
+        "Malaysia",
+        "Singapore",
+        "Philippines",
+        "Sri Lanka",
+        "Nepal",
+        "Afghanistan",
+        "Ukraine",
+        "Poland",
+        "Netherlands",
+        "Belgium",
+        "Sweden",
+        "Norway",
+        "Denmark",
+        "Finland",
+        "Switzerland",
+        "Austria",
+        "Greece",
+        "Israel",
+        "Iraq",
+        "Venezuela"
+    ])
     const [deptData, setDeptData] = useState([]);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -197,16 +248,16 @@ const DoctorKyc = () => {
     }, [formik.initialValues]);
 
     useEffect(() => {
-        const fetchCountries = async () => {
-            try {
-                const response = await fetch("https://restcountries.com/v3.1/all");
-                const countryData = await response.json();
-                // console.log(countryData);
-                setCountryData(countryData)
-            } catch (error) {
-                console.error("Error fetching countries:", error);
-            }
-        };
+        // const fetchCountries = async () => {
+        //     try {
+        //         const response = await fetch("https://restcountries.com/v3.1/all");
+        //         const countryData = await response.json();
+        //         // console.log(countryData);
+        //         setCountryData(countryData)
+        //     } catch (error) {
+        //         console.error("Error fetching countries:", error);
+        //     }
+        // };
 
         const getDepartments = async () => {
             try {
@@ -221,7 +272,7 @@ const DoctorKyc = () => {
             }
         }
 
-        fetchCountries();
+        // fetchCountries();
         getDepartments();
     }, []);
 
@@ -248,10 +299,7 @@ const DoctorKyc = () => {
                         <img src={previewUrl || doctorProfileImage} className="w-[10rem] h-[10rem] object-cover object-right rounded-full" alt="profile" />
                     </figure>
                     <div>
-                        {/* <div>
-                            <button onClick={handleAddItem}>Add</button>
-                            <h1> Hi -- {store.doctorData.kyc.name}</h1>
-                        </div> */}
+
 
                         <GiCloudUpload onClick={handleUpload} color="teal" className="size-12 animate-bounce" />
                         <span>Upload Image</span>
@@ -368,7 +416,7 @@ const DoctorKyc = () => {
                                 {/* <option value="India">India</option>
                                 <option value="Usa">USA</option>
                                 <option value="Canada">Canada</option> */}
-                                {countryData.map((item) => <option key={item.name.common} value={item.name.common}>{item.name.common}</option>)}
+                                {countryData.map((item) => <option key={item} value={item}>{item}</option>)}
                             </select>
                             {formik.touched.country && formik.errors.country && (
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.country}</div>

@@ -9,7 +9,7 @@ import UserVideoCall from "@components/UserComponents/UserVideoCall"
 
 const AppLayout = () => {
     const { showIncomingVideoCall,  showVideoCallUser } = useSelector((state: any) => state.user)
-// console.log("ShowVideoCallUser : ", showVideoCallUser);
+
 
     return (
         // <div className="App">

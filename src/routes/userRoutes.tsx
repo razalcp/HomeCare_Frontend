@@ -9,18 +9,18 @@ import LoginPage from "src/pages/userPages/LoginPage"
 import DoctorRegisterPage from "src/pages/DoctorPages/DoctorRegisterPage";
 
 
-// import TrainerKyc from "@components/DoctorComponents/TrainerKyc";
+
 
 import RegistrationSuccess from 'src/components/DoctorComponents/RegistrationSuccess'
 import AdminLogin from "@components/AdminComponents/AdminLogin";
 import AdminHomePage from "src/pages/AdminPages/AdminHomePage";
-// import Sidebar from "@components/AdminComponents/SampleSideBar";
+
 import AdminDepartmentsPage from "src/pages/AdminPages/AdminDepartmentsPage";
 import AdminAppLayout from "src/adminApp";
-// import DoctorForm from "@components/DoctorComponents/DoctorForm";
+
 import FormComponent from "@components/DoctorComponents/FormComponent";
 import DoctorKyc from "@components/DoctorComponents/DoctorKyc";
-// import DoctorVerificationPage from "src/pages/AdminPages/DoctorVerificationPage";
+
 import DoctorVerification from "@components/AdminComponents/DoctorVerification";
 import DoctorDetailsPage from "src/pages/AdminPages/DoctorDetailsPage";
 import DoctorsPage from "src/pages/userPages/DoctorsPage";

@@ -20,7 +20,6 @@ import {
 import { toast } from "sonner";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { doctorApi } from "src/utils/axios/axiosConfig";
 import Notiflix from "notiflix";
 
 interface Slot {
@@ -35,7 +34,8 @@ const DoctorAddSlot: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [slots, setSlots] = useState<Slot[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const slotsPerPage = 10;
+  const [totalSlots, setTotalSlots] = useState(0);
+  const slotsPerPage = 8;
 
   const doctorInfo = localStorage.getItem("doctorInfo");
   const parsedDoctorInfo = JSON.parse(doctorInfo as any);
@@ -43,19 +43,15 @@ const DoctorAddSlot: React.FC = () => {
   useEffect(() => {
     const getSlots = async () => {
       try {
-        const response: any = await fetchDoctorSlots(parsedDoctorInfo._id);
-        setSlots(response.data);
+        const response: any = await fetchDoctorSlots(parsedDoctorInfo._id, currentPage, slotsPerPage);
+        setSlots(response.data.slots);
+        setTotalSlots(response.data.total);
       } catch (error) {
         toast.error("Failed to fetch slots");
       }
     };
     getSlots();
-  }, []);
-
-  const currentSlots = slots.slice(
-    (currentPage - 1) * slotsPerPage,
-    currentPage * slotsPerPage
-  );
+  }, [currentPage]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -69,7 +65,7 @@ const DoctorAddSlot: React.FC = () => {
         "No",
         async () => {
           try {
-            const remove = await deleteSlot(slotId);
+            await deleteSlot(slotId);
             setSlots((prev) => prev.filter((slot) => slot._id !== slotId));
             toast.success("Slot removed successfully");
           } catch (error) {
@@ -128,10 +124,10 @@ const DoctorAddSlot: React.FC = () => {
 
           const ruleOptions: any = { dtstart: startDate, until: endDate };
 
-          if (values.frequency === "daily") ruleOptions.freq = RRule.DAILY;
-          else if (values.frequency === "weekly") {
+          if (values.frequency === "daily") {
+            ruleOptions.freq = RRule.DAILY;
+          } else if (values.frequency === "weekly") {
             ruleOptions.freq = RRule.WEEKLY;
-            // ruleOptions.byweekday = values.weekdays;
             const weekdayMap = [
               RRule.SU,
               RRule.MO,
@@ -141,7 +137,6 @@ const DoctorAddSlot: React.FC = () => {
               RRule.FR,
               RRule.SA,
             ];
-
             ruleOptions.byweekday = values.weekdays.map((day) => weekdayMap[day]);
           }
 
@@ -157,8 +152,8 @@ const DoctorAddSlot: React.FC = () => {
           await addDoctorSlots(newSlots);
         }
 
-        setSlots((prevSlots) => [...prevSlots as any, ...newSlots]);
         toast.success("Slot(s) added successfully!");
+        setCurrentPage(1); // Reset to first page
         handleClose();
       } catch (error: any) {
         toast.error(error.response?.data?.message || "Something went wrong");
@@ -170,34 +165,44 @@ const DoctorAddSlot: React.FC = () => {
     setCurrentPage(page);
   };
 
-  const getMaxEndDate = (startDate: string, daysLimit: number) => {
-    if (!startDate) return undefined;
-    const date = new Date(startDate);
-    date.setDate(date.getDate() + daysLimit);
-    return date.toISOString().split("T")[0];
-  };
-
   return (
     <div>
-      <div style={{ marginBottom: "20px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+        <h1 className="text-2xl md:text-3xl font-extrabold text-customHeaderBlue text-center w-full">
+          ✥ Add Available Slots
+        </h1>
         <Button
           variant="contained"
           sx={{
             backgroundColor: "#14b8a6",
-            color: "white",
-            float: "right",
-            mb: 4,
-            mr: 4,
+            color: "#fff",
+            px: 3,
+            py: 1.5,
+            fontWeight: 600,
+            fontSize: "16px",
+            borderRadius: "12px",
+            boxShadow: "0 6px 12px rgba(0, 0, 0, 0.1)",
+            textTransform: "none",
+            position: "absolute",
+            top: 20,
+            right: 40,
+            '&:hover': {
+              backgroundColor: "#0d9488",
+              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+            },
           }}
           onClick={handleOpen}
         >
-          Add Slots
+          ✙ Add Slots
         </Button>
+
+
       </div>
 
 
+      {/* Slot Dialog */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold' }}>Add Slots</DialogTitle>
+        <DialogTitle sx={{ textAlign: "center", fontWeight: "bold" }}>Add Slots</DialogTitle>
         <DialogContent>
           <div className="w-[540px]">
             <form onSubmit={formik.handleSubmit}>
@@ -345,8 +350,6 @@ const DoctorAddSlot: React.FC = () => {
                   )}
                 </>
               )}
-
-              {/* Dialog Actions */}
               <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
                 <Button type="submit" variant="contained" color="primary">
@@ -358,59 +361,28 @@ const DoctorAddSlot: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <table
-        style={{
-          width: "100%",
-          marginTop: "20px",
-          borderCollapse: "collapse",
-        }}
-      >
+      {/* Slot Table */}
+      <table style={{ width: "100%", marginTop: "44px", borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ background: "#f4f4f4" }}>
             <th style={{ padding: "10px", border: "1px solid #ddd" }}>Date</th>
-            <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-              Start Time
-            </th>
-            <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-              End Time
-            </th>
-            <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-              Status
-            </th>
-            <th style={{ padding: "10px", border: "1px solid #ddd" }}>
-              Action
-            </th>
+            <th style={{ padding: "10px", border: "1px solid #ddd" }}>Start Time</th>
+            <th style={{ padding: "10px", border: "1px solid #ddd" }}>End Time</th>
+            <th style={{ padding: "10px", border: "1px solid #ddd" }}>Status</th>
+            <th style={{ padding: "10px", border: "1px solid #ddd" }}>Action</th>
           </tr>
         </thead>
         <tbody>
-          {currentSlots.map((slot, index) => (
+          {slots.map((slot, index) => (
             <tr key={index}>
+              <td style={{ padding: "10px", border: "1px solid #ddd" }}>{slot.date}</td>
+              <td style={{ padding: "10px", border: "1px solid #ddd" }}>{slot.startTime}</td>
+              <td style={{ padding: "10px", border: "1px solid #ddd" }}>{slot.endTime}</td>
               <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                {slot.date}
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                {slot.startTime}
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                {slot.endTime}
-              </td>
-              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                <span style={{ color: slot.status === 'Available' ? '#39FF14' : 'inherit', fontWeight: 'bold' }}>
+                <span style={{ color: slot.status === "Available" ? "#39FF14" : "inherit", fontWeight: "bold" }}>
                   {slot.status}
                 </span>
               </td>
-
-              {/* <td style={{ padding: "10px", border: "1px solid #ddd" }}>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  size="small"
-                  onClick={() => handleRemove(slot._id)}
-                >
-                  Remove
-                </Button>
-              </td> */}
-
               <td style={{ padding: "10px", border: "1px solid #ddd" }}>
                 {slot.status === "Booked" ? (
                   <span style={{ color: "#1F51FF", fontWeight: "bold" }}>Slot Booked</span>
@@ -425,12 +397,12 @@ const DoctorAddSlot: React.FC = () => {
                   </Button>
                 )}
               </td>
-
             </tr>
           ))}
         </tbody>
       </table>
 
+      {/* Pagination Controls */}
       <div style={{ marginTop: "20px", textAlign: "center" }}>
         <Button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -439,11 +411,11 @@ const DoctorAddSlot: React.FC = () => {
           Previous
         </Button>
         <span style={{ margin: "0 15px" }}>
-          Page {currentPage} of {Math.ceil(slots.length / slotsPerPage)}
+          Page {currentPage} of {Math.ceil(totalSlots / slotsPerPage)}
         </span>
         <Button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === Math.ceil(slots.length / slotsPerPage)}
+          disabled={currentPage === Math.ceil(totalSlots / slotsPerPage)}
         >
           Next
         </Button>

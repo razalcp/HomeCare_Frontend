@@ -386,33 +386,7 @@ export default function DoctorDashboard({ }: DoctorDashboardProps) {
                     </Card>
                 </div>
 
-                {/* Quick Actions */}
-                {/* <Card>
-                    <CardHeader>
-                        <CardTitle>Quick Actions</CardTitle>
-                        <CardDescription>Common tasks and shortcuts</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <button className="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-                                <Calendar className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-                                <span className="text-sm font-medium text-blue-700">Schedule Appointment</span>
-                            </button>
-                            <button className="p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
-                                <Users className="w-6 h-6 text-green-600 mx-auto mb-2" />
-                                <span className="text-sm font-medium text-green-700">View Patients</span>
-                            </button>
-                            <button className="p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                                <DollarSign className="w-6 h-6 text-purple-600 mx-auto mb-2" />
-                                <span className="text-sm font-medium text-purple-700">Revenue Report</span>
-                            </button>
-                            <button className="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors">
-                                <Activity className="w-6 h-6 text-orange-600 mx-auto mb-2" />
-                                <span className="text-sm font-medium text-orange-700">Analytics</span>
-                            </button>
-                        </div>
-                    </CardContent>
-                </Card> */}
+                
             </div>
         </div>
     )

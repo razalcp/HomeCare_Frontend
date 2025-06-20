@@ -140,7 +140,7 @@ import { useState, useEffect } from "react"
 import { Heart } from "lucide-react"
 import { Navigate, useLocation } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
-import { fetchDoctorSlots } from "src/services/doctor/doctorapi"
+import { fetchDoctorSlots, fetchDoctorSlotsforBooking } from "src/services/doctor/doctorapi"
 import { loadStripe } from '@stripe/stripe-js';
 import userApi from "src/utils/axios/axiosConfig"
 import { walletBooking } from "src/services/user/userApi"
@@ -161,7 +161,7 @@ export default function AppointmentBooking() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const docData = await fetchDoctorSlots(doctorId);
+        const docData: any = await fetchDoctorSlotsforBooking(doctorId);
         setDocArray(docData.data)
       } catch (error) {
         console.error("Error fetching doctor slots:", error);

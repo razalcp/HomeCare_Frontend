@@ -1,14 +1,26 @@
 import userApi, { doctorApi } from "src/utils/axios/axiosConfig";
 
-
-const getVerifiedDoctors = async () => {
-    try {
-        return await userApi.get('/getVerifiedDoctors')
-    } catch (error) {
-        console.log(error);
-
-    }
+interface DoctorQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sort?: string;
+  departments?: string[];
+  minFee?: number;
+  maxFee?: number;
 }
+
+const getVerifiedDoctors = async (params: DoctorQueryParams) => {
+  try {
+    return await userApi.get('/getVerifiedDoctors', {
+      params
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 
 const saveBooking = async (slotId: string, userId: string, doctorId: string) => {
 
@@ -35,7 +47,7 @@ const getUserBookings = async (userId: string) => {
     } catch (error) {
         return []
     }
-}
+};
 
 const updateUserProfile = async (values: any) => {
     return new Promise((resolve, reject) => {
@@ -149,8 +161,6 @@ const getPrescription = async (bookingId: string) => {
 
 const submitReview = async (reviewData: any) => {
     try {
-        // console.log("serv",reviewData);
-
         const response = await userApi.post('/submitReview', reviewData)
         return response
     } catch (error: any) {
@@ -162,12 +172,12 @@ const submitReview = async (reviewData: any) => {
 };
 
 const findReviewData = async (doctorId: string) => {
-    
+
 
     try {
         const response = await userApi.get('/reviewDetails', {
             params: { doctorId }
-        })    
+        })
         return response
     } catch (error) {
         throw error

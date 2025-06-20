@@ -21,18 +21,21 @@ const adminDepartmentServ = async (dept: String) => {
     throw error
   }
 }
-const getDepartments = async () => {
-  try {
-    const departments = await adminApi.get('/getDepartments')
-    return departments
 
+
+const getDepartments = async (page: number, limit: number) => {
+  try {
+    const departments = await adminApi.get('/getDepartments', {
+      params: { page, limit }
+    });
+    return departments;
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
+
 
 const updateListUnlistServ = async (department: String) => {
-  // console.log("dept", department);
 
   try {
     const update = await adminApi.patch('/updateListUnlist', { department })
@@ -42,19 +45,15 @@ const updateListUnlistServ = async (department: String) => {
   }
 }
 
-const getDoctors = async () => {
-  try {
-    const docData = await adminApi.get('/getDoctorData')
-    return docData
-  } catch (error) {
 
-  }
-}
+
+const getDoctors = async (page: number, limit: number) => {
+  return await adminApi.get(`/getDoctorData?page=${page}&limit=${limit}`);
+};
+
 
 const updateKycStatus = async (status: String, doctorId: String) => {
   try {
-    // console.log(status,doctorId);
-
     const response = await adminApi.patch('/updateKycStatus', { status, doctorId })
     return response
   } catch (error) {
@@ -62,14 +61,18 @@ const updateKycStatus = async (status: String, doctorId: String) => {
   }
 }
 
-const getPatientData = async () => {
+const getPatientData = async (page: number, limit: number) => {
   try {
-    const responsePatientData = await adminApi.get('/getPatients')
-    return responsePatientData
+    const response = await adminApi.get('/getPatients', {
+      params: { page, limit }
+    });
+    return response.data;
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
+
+
 const updatePatients = async (buttonName: String, id: string) => {
   try {
     const updateisUserBlocked = await adminApi.patch('/updateIsBlocked', { buttonName, id })

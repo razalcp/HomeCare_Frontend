@@ -2,17 +2,9 @@ import { doctorApi } from "src/utils/axios/axiosConfig"
 
 
 const doctorServ = (values: any) => {
-    console.log("Inside doctor service api ----->", values);
-
-    // const formData = new FormData();
 
     return new Promise<void>((resolve, reject) => {
-        // console.log("inside DoctoreService api call ----> ", values)
-        // const profileImage = values.profileImage.name
-        // const certifications = values.certifications
 
-
-        // console.log("Inside doctor serv")
         doctorApi.post("/doctorKyc", values, {
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -27,7 +19,6 @@ const doctorServ = (values: any) => {
 
 const getDepartmentsServ = async () => {
     const getDepartments = await doctorApi.get('/getDepartments')
-    // console.log("serv",getDepartments.data);
     return getDepartments
 
 }
@@ -53,17 +44,14 @@ const updateDoctorProfile = async (values: any) => {
 
 const addDoctorSlots = async (values: any) => {
     try {
-        // console.log("this is values", values);
-
         const response = await doctorApi.post("/addDoctorSlots", values, {
             headers: {
                 "Content-Type": "application/json",  // Change this if not uploading files
             },
         });
 
-        // console.log(response.data);
     } catch (error) {
-        // console.error("Error adding doctor slots: this is error", error);
+
         throw error
     }
 
@@ -71,27 +59,38 @@ const addDoctorSlots = async (values: any) => {
 
 };
 
-const fetchDoctorSlots = async (doctorId: string) => {
+const fetchDoctorSlotsforBooking = async (doctorId: string) => {
 
 
-    return await doctorApi.get(`/availableDoctorSlots/${doctorId}`);
+    return await doctorApi.get(`/availableDoctorSlotsForBooking/${doctorId}`);
+};
+
+const fetchDoctorSlots = async (doctorId: string, page: number, limit: number) => {
+    return await doctorApi.get(`/availableDoctorSlots/${doctorId}`, {
+        params: { page, limit },
+    });
 };
 
 
-const getMyBookings = async (doctorId: string) => {
-    try {
-        const response = await doctorApi.post('/getMyBookings', { doctorId: doctorId })
-        return response.data
 
+
+
+const getMyBookings = async (doctorId: string, page: number, limit: number) => {
+    try {
+        const response = await doctorApi.post('/getMyBookings', {
+            doctorId,
+            page,
+            limit
+        });
+        return response.data; // { bookings, totalPages }
     } catch (error) {
-        return []
+        return { bookings: [], totalPages: 1 };
     }
 };
 
+
 const bookedUsers = async () => {
     try {
-        console.log("booked users frontend");
-
         const response = await doctorApi.get('/bookedUsers')
         return response.data
     } catch (error) {
@@ -142,10 +141,18 @@ const savePrescription = async (presData: any) => {
 const findDoctorDashboard = async (doctorId: string) => {
     try {
 
-        
+
         const response = await doctorApi.get('/doctorDashBoard', { params: { doctorId } })
-        console.log("This is response",response);
-        
+
+        return response
+    } catch (error) {
+        throw error
+    }
+}
+
+const editDepartmentServ = async (departmentId: string, departmentName: string) => {
+    try {
+        const response = await doctorApi.patch('/editDepartment', { departmentId, departmentName })
         return response
     } catch (error) {
         throw error
@@ -158,11 +165,13 @@ export {
     updateDoctorProfile,
     addDoctorSlots,
     fetchDoctorSlots,
+    fetchDoctorSlotsforBooking,
     getMyBookings,
     bookedUsers,
     sendMessage,
     fetchMessages,
     deleteSlot,
     savePrescription,
-     findDoctorDashboard 
+    findDoctorDashboard,
+    editDepartmentServ
 }

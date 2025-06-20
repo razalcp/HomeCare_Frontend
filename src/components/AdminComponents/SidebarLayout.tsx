@@ -35,7 +35,7 @@ const SidebarLayout = () => {
     // { icon: <Users size={24} />, label: 'Doctors', path: '/manageDoctors' },
     { icon: <Settings size={24} />, label: 'Departments', path: '/adminDepartments' },
     { icon: <Users size={24} />, label: 'Patients', path: '/managePatients' },
-    { icon: <IndianRupee size={24} />, label: 'Wallet', path: '/adminWallet' },
+    { icon: <IndianRupee size={24} />, label: 'Revenue Management', path: '/adminWallet' },
     { icon: <ShieldBan size={24} />, label: 'Logout', action: 'logout' }, // Logout action
   ];
 

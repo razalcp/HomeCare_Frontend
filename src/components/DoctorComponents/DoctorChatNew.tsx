@@ -1047,71 +1047,7 @@ export default function DoctorChatNew() {
                         <div className="font-medium">{selectedContact.name}</div>
 
                         <div className="ml-auto flex gap-3">
-                            {/* <button
-                                className="bg-green-500 px-4 py-2 rounded-lg text-white"
-                                onClick={openPrescriptionModal}
-                            >
-                                Write Prescription
-                            </button> */}
-                            {/* <button
-                                className="flex justify-center gap-3 bg-teal-500 px-4 py-2 rounded-lg"
-                                onClick={navigateVideoChat}
-                            >
-                                <h1 className="text-1xl text-white">Start Session</h1>
-                                <FaVideo className="h-6 w-6" />
-                            </button> */}
-
-                            {/* <button
-                                className="flex justify-center gap-3 bg-teal-500 px-4 py-2 rounded-lg"
-                                onClick={() => setShowModal(true)}
-                            >
-                                <h1 className="text-1xl text-white">Start Session</h1>
-                                <FaVideo className="h-6 w-6 text-white" />
-                            </button> */}
-
-                            {/* Modal */}
-                            {/* {showModal && (
-                                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                                    <div className="bg-white p-6 rounded-lg w-96 space-y-4">
-                                        <h2 className="text-lg font-semibold">Select a Booking</h2>
-                                        <div className="space-y-2 max-h-64 overflow-y-auto">
-                                            {contacts.filter((booking) => booking.consultationStatus === "pending")
-                                                .map((booking) => (
-                                                    <label
-                                                        key={`${booking.bookingId}-${booking.slotId?._id}`}
-                                                        className="flex items-center gap-2 border p-2 rounded-md cursor-pointer"
-                                                    >
-                                                        <input
-                                                            type="radio"
-                                                            name="booking"
-                                                            value={booking.bookingId}
-                                                            checked={selectedBookingId === booking.bookingId}
-                                                            onChange={() => setSelectedBookingId(booking.bookingId)}
-                                                        />
-                                                        <span>
-                                                            {booking.name} - Booking Date: {booking?.slotId?.date} -Consultation Time:{booking.slotId?.startTime || "N/A"}-{booking.slotId?.endTime}
-                                                        </span>
-                                                    </label>
-                                                ))}
-                                        </div>
-
-                                        <div className="flex justify-end gap-2 pt-4">
-                                            <button
-                                                className="px-4 py-1 rounded bg-gray-300"
-                                                onClick={() => setShowModal(false)}
-                                            >
-                                                Cancel
-                                            </button>
-                                            <button
-                                                className="px-4 py-1 rounded bg-teal-600 text-white"
-                                                onClick={handleSubmit}
-                                            >
-                                                Start
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            )} */}
+                     
 
                             {contacts.filter((booking) => booking.consultationStatus === "pending").length > 0 && (
                                 <>
