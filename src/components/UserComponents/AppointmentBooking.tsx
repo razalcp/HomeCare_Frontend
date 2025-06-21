@@ -182,44 +182,6 @@ export default function AppointmentBooking() {
     slot => slot.date === selectedDate && slot.isBooked === false
   )
 
-  // const makeWalletPayment = async () => {
-  //   try {
-  //     if (!selectedDate || !selectedTime) {
-  //       console.error("Please select a date and time before proceeding to payment.");
-  //       return;
-  //     }
-  //     const userInfoString = localStorage.getItem("userInfo");
-  //     const userInfo = userInfoString ? JSON.parse(userInfoString) : null;// Get user info (modify as per your auth system)
-  //     if (!userInfo) {
-  //       console.error("User not logged in.");
-  //       return;
-  //     }
-  //     const selectedSlot = docArray.find(slot => slot.date === selectedDate && slot.startTime === selectedTime);
-  //     if (!selectedSlot) {
-  //       console.error("Selected slot not found.");
-  //       return;
-  //     }
-  //     const body = {
-  //       doctorId: doctorId,
-  //       doctorFees: doctor.consultationFee,
-  //       userId: userInfo._id,
-  //       slotId: selectedSlot._id
-  //     };
-
-  //     const response: any = await walletBooking(body as any)
-
-
-  //     if (response?.data == "Wallet Booking Successful") {
-  //       navigate('/success')
-  //     }
-  //   } catch (error: any) {
-  //     console.log(error.message);
-  //     if (error.message === 'Insufficient Wallet Balance') {
-  //       Notiflix.Notify.failure("Insufficient Wallet Balance");
-  //     }
-  //   }
-
-  // }
 
 
   const makeWalletPayment = async () => {
