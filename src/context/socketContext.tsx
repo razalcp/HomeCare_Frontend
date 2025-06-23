@@ -43,7 +43,12 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     }
     // console.log(userId , "userId" , socketRef.current, "socketRef" )
 
-    socketRef.current = io("http://localhost:3001", {
+    // socketRef.current = io("http://localhost:3001", {
+    //   withCredentials: true,
+    //   transports: ["websocket"],
+    //   query: { userId },
+    // });
+    socketRef.current = io("https://homecare.razal.live", {
       withCredentials: true,
       transports: ["websocket"],
       query: { userId },
