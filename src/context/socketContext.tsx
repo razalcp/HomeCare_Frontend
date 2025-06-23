@@ -48,6 +48,8 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     //   transports: ["websocket"],
     //   query: { userId },
     // });
+    console.log("Inside createSocket ",userId);
+    
     socketRef.current = io("https://homecare.razal.live", {
       withCredentials: true,
       transports: ["websocket"],
