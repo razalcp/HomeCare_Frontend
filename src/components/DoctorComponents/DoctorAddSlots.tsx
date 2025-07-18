@@ -35,6 +35,8 @@ const DoctorAddSlot: React.FC = () => {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalSlots, setTotalSlots] = useState(0);
+  const [refreshSlots, setRefreshSlots] = useState(false);
+
   const slotsPerPage = 8;
 
   const doctorInfo = localStorage.getItem("doctorInfo");
@@ -51,7 +53,7 @@ const DoctorAddSlot: React.FC = () => {
       }
     };
     getSlots();
-  }, [currentPage]);
+  }, [currentPage, refreshSlots]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -116,7 +118,13 @@ const DoctorAddSlot: React.FC = () => {
             status: "Available",
             doctorId: parsedDoctorInfo._id,
           };
-          await addDoctorSlots(newSlot);
+          const addSlot = await addDoctorSlots(newSlot);
+      
+
+          if (addSlot.data.message === "Slot added successfully!") {
+            setRefreshSlots((prev) => !prev); 
+          }
+
           newSlots = [newSlot];
         } else {
           const startDate = new Date(`${values.date}T${values.startTime}`);
@@ -149,7 +157,10 @@ const DoctorAddSlot: React.FC = () => {
             doctorId: parsedDoctorInfo._id,
           }));
 
-          await addDoctorSlots(newSlots);
+         const slotResponse= await addDoctorSlots(newSlots);
+         if (slotResponse.data.message === "Slot added successfully!") {
+            setRefreshSlots((prev) => !prev); 
+          }
         }
 
         toast.success("Slot(s) added successfully!");

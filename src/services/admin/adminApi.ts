@@ -88,7 +88,19 @@ const getDashBoardData = async () => {
   } catch (error) {
     throw error
   }
+};
+
+const editDepartmentServ = async (departmentId: string, departmentName: string) => {
+  try {
+    const response = await adminApi.patch('/editDepartment', { departmentId, departmentName })
+    return response
+  } catch (error) {
+    throw error
+  }
 }
+
+
+
 export {
   adminAuthServ,
   adminDepartmentServ,
@@ -98,5 +110,6 @@ export {
   updateKycStatus,
   getPatientData,
   updatePatients,
-  getDashBoardData
+  getDashBoardData,
+  editDepartmentServ
 }

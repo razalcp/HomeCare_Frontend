@@ -5,9 +5,10 @@ import adminReducer from './Slice/adminSlice'
 const appStore = configureStore({
     reducer: {
         doctor: doctorReducer,
-        user:userReducer,
-        admin:adminReducer
+        user: userReducer,
+        admin: adminReducer
     }
 })
 
 export default appStore
+export type RootState = ReturnType<typeof appStore.getState>;

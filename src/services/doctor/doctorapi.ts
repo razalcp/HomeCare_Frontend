@@ -1,4 +1,4 @@
-import { doctorApi } from "src/utils/axios/axiosConfig"
+import userApi, { doctorApi } from "src/utils/axios/axiosConfig"
 
 
 const doctorServ = (values: any) => {
@@ -49,6 +49,7 @@ const addDoctorSlots = async (values: any) => {
                 "Content-Type": "application/json",  // Change this if not uploading files
             },
         });
+        return response
 
     } catch (error) {
 
@@ -60,8 +61,6 @@ const addDoctorSlots = async (values: any) => {
 };
 
 const fetchDoctorSlotsforBooking = async (doctorId: string) => {
-
-
     return await doctorApi.get(`/availableDoctorSlotsForBooking/${doctorId}`);
 };
 
@@ -150,16 +149,10 @@ const findDoctorDashboard = async (doctorId: string) => {
     }
 }
 
-const editDepartmentServ = async (departmentId: string, departmentName: string) => {
-    try {
-        const response = await doctorApi.patch('/editDepartment', { departmentId, departmentName })
-        return response
-    } catch (error) {
-        throw error
-    }
-}
 
-export default doctorServ
+
+export default doctorServ;
+
 export {
     getDepartmentsServ,
     updateDoctorProfile,
@@ -173,5 +166,4 @@ export {
     deleteSlot,
     savePrescription,
     findDoctorDashboard,
-    editDepartmentServ
-}
+};

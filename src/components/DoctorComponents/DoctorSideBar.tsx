@@ -19,6 +19,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { doctorApi } from "src/utils/axios/axiosConfig";
 import { removeDoctorData } from "src/Redux/Slice/doctorSlice"
+import { useSelector } from "react-redux"
+import { RootState } from "src/Redux/appStore"
 
 type DoctorInfo = {
     name: string;
@@ -31,15 +33,18 @@ type DoctorInfo = {
 }
 
 export function DoctorSidebar({ className }: { className?: string }) {
-    const [doctorData, setDoctorData] = useState<DoctorInfo | null>(null);
+    // const [doctorData, setDoctorData] = useState<DoctorInfo | null>(null);
+    const doctorData = useSelector((state: RootState) => state.doctor.doctorInfo) as DoctorInfo | null;
+
+
     const [activeItem, setActiveItem] = useState("/doctorHome"); // Default activp[;852p[\963.\e is Dashboard
 
-    useEffect(() => {
-        const storedDoctor = localStorage.getItem("doctorInfo");
-        if (storedDoctor) {
-            setDoctorData(JSON.parse(storedDoctor));
-        }
-    }, []);
+    // useEffect(() => {
+    //     const storedDoctor = localStorage.getItem("doctorInfo");
+    //     if (storedDoctor) {
+    //         setDoctorData(JSON.parse(storedDoctor));
+    //     }
+    // }, []);
 
     const [is9lable, setIsAvailable] = useState(false);
     const location = useLocation();

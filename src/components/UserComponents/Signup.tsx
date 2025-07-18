@@ -56,8 +56,6 @@ const Signup = () => {
 }) => {
       try {
         if (values) {
-          console.log("signup try block");
-          
           localStorage.removeItem('otp-timer');
           const registrationState = await dispatch(registerUser(values))
 

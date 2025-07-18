@@ -1,45 +1,22 @@
-// import { useLocation } from "react-router-dom";
 
-// const DoctorProfile = () => {
-//     const location = useLocation();
-//     const doctorData = location.state?.doctorData; // Retrieve the passed data
-//     console.log("Inside doc profile", doctorData);
-
-//     return (
-//         <div>
-//             <h1>Profile Page</h1>
-//             <p>Name: {doctorData?.name}</p>
-//             <p>Specialty: {doctorData?.email}</p>
-//         </div>
-//     );
-// };
-
-// export default DoctorProfile;
-
-
-
-
-/////////////////////////////////
-
-
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { updateDoctorProfile } from "src/services/doctor/doctorapi";
-import DoctorHome from "./DoctorHome";
-import { adminApi } from "src/utils/axios/axiosConfig";
-import { getDoctors } from "src/services/admin/adminApi";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "src/Redux/appStore";
+import { addDoctorData } from "src/Redux/Slice/doctorSlice";
+import { toast } from "sonner";
 
 const DoctorProfile = () => {
-
-
     const location = useLocation();
+    const dispatch = useDispatch();
 
-    const initialDoctorData = location.state?.doctorData;
+    // Get doctor data from Redux or fallback to location.state
+    const reduxDoctor = useSelector((state: RootState) => state.doctor.doctorInfo);
+    const initialDoctorData = reduxDoctor || location.state?.doctorData;
 
     const [doctorData, setDoctorData] = useState(initialDoctorData);
-
     const [isEditing, setIsEditing] = useState(false);
 
     const handleSubmit = async (values: any) => {
@@ -54,55 +31,68 @@ const DoctorProfile = () => {
 
         console.log("Updated Data:", Object.fromEntries(form));
         setIsEditing(false);
-        // Here you can send the form data to your backend API
-        // updateDoctorProfile(form)
-        //     .then((updatedData) => {
-        //         console.log("Updated Profile Data:", updatedData);
-        //         setIsEditing(false);
-        //     })
-        //     .catch((error) => {
-        //         console.error("Update Failed:", error);
-        //     });
+
         try {
             const updatedData = await updateDoctorProfile(form);
             console.log("Updated Profile Data:", updatedData);
 
+            // ✅ Update Redux state
+            dispatch(addDoctorData(updatedData));
 
+            // ✅ Update local component state
             setDoctorData((prevData) => ({
                 ...prevData,
                 ...updatedData,
             }));
+            toast.success("Profile updated successfully!", {
+                position: "top-center",
+                duration: 5000,
+            });
 
             setIsEditing(false);
         } catch (error) {
             console.error("Update Failed:", error);
+            toast.error("Failed to update profile. Please try again.", {
+                position: "top-center",
+                duration: 5000,
+            });
         }
     };
 
-    const handleImageUpload = (event, setFieldValue) => {
-        const file = event.target.files[0];
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>, setFieldValue: Function) => {
+        const file = event.target.files?.[0];
         if (file) {
             setFieldValue("profileImage", file);
         }
     };
 
     return (
-        <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded-lg">
+        <div className="mt-10 p-6 max-w-lg mx-auto bg-white shadow-2xl rounded-lg">
             <h1 className="text-2xl font-bold mb-4">Doctor Profile</h1>
-            <Formik initialValues={{
-                profileImage: doctorData?.profileImage || "",
-                email: doctorData?.email || "",
-                dateOfBirth: doctorData?.dateOfBirth || "",
-                experience: doctorData?.experience || "",
-                bio: doctorData?.bio || ""
-            }}
+            <Formik
+                initialValues={{
+                    profileImage: doctorData?.profileImage || "",
+                    email: doctorData?.email || "",
+                    dateOfBirth: doctorData?.dateOfBirth || "",
+                    experience: doctorData?.experience || "",
+                    bio: doctorData?.bio || ""
+                }}
                 onSubmit={handleSubmit}
+                enableReinitialize={true}
             >
                 {({ values, setFieldValue }) => (
                     <Form className="space-y-4">
                         <div className="text-center">
                             <label htmlFor="profileImageUpload" className="cursor-pointer">
-                                <img src={values.profileImage instanceof File ? URL.createObjectURL(values.profileImage) : values.profileImage} alt="Profile" className="w-32 h-32 rounded-full mx-auto mb-4" />
+                                <img
+                                    src={
+                                        values.profileImage instanceof File
+                                            ? URL.createObjectURL(values.profileImage)
+                                            : values.profileImage
+                                    }
+                                    alt="Profile"
+                                    className="w-32 h-32 rounded-full mx-auto mb-4"
+                                />
                             </label>
                             {isEditing && (
                                 <input
@@ -151,3 +141,4 @@ const DoctorProfile = () => {
 };
 
 export default DoctorProfile;
+

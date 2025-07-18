@@ -185,10 +185,14 @@ const findReviewData = async (doctorId: string) => {
 
 }
 
+const fetchDoctorSlotsforBooking = async (doctorId: string) => {
 
+        return await userApi.get(`/findDoctorSlots/${doctorId}`)
+
+};
 
 export {
     getVerifiedDoctors, saveBooking, getUserBookings, updateUserProfile,
     bookedDoctors, fetchMessages, sendMessage, uploadToCloudinary, deleteMessage,
-    walletBooking, getPrescription, submitReview, findReviewData
+    walletBooking, getPrescription, submitReview, findReviewData,fetchDoctorSlotsforBooking 
 }

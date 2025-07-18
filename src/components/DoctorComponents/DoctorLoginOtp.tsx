@@ -80,7 +80,7 @@ const DoctorLoginOtp = () => {
             const response : any = await doctorApi.post('/verifyDoctorOtp', { enteredOtp: inputValue })
 
             const doctorData = response.data.doctorData
-            // console.log("This is doctor data", doctorData);
+           
             dispatch(addDoctorData(doctorData))
 
 
