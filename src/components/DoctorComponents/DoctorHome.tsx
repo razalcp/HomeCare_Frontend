@@ -243,10 +243,17 @@ export default function DoctorDashboard({ }: DoctorDashboardProps) {
                             <Clock className="h-4 w-4 text-orange-600" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-orange-900">{dashboardData.upcomingAppointments.length}</div>
+                            <div className="text-2xl font-bold text-orange-900">
+                                {
+                                    dashboardData.upcomingAppointments.filter(
+                                        (appointment) => appointment.consultationStatus === 'pending'
+                                    ).length
+                                }
+                            </div>
+
                             <p className="text-xs text-orange-600 mt-1">
                                 <Clock className="w-3 h-3 inline mr-1" />
-                                Next in 2 hours
+                                You have upcoming appointment's
                             </p>
                         </CardContent>
                     </Card>
