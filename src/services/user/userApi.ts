@@ -147,7 +147,7 @@ const walletBooking = async (body: any) => {
 
 const getPrescription = async (bookingId: string) => {
     try {
-        const presData = await doctorApi.get('/prescription', {
+        const presData = await userApi.get('/prescription', {
             params: { bookingId }
         })
         return presData.data
