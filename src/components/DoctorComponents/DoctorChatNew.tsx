@@ -229,9 +229,24 @@ export default function DoctorChatNew() {
         navigateVideoChat()
     };
     const navigateVideoChat = () => {
+        console.log("navigateVideoChat");
+
         const contactBooking = contacts.find((contact) => contact._id === selectedContact?._id);
+        console.log("Selected Contact : ", contactBooking);
+
         const bookingId: any = contactBooking?.bookingId || "";
         if (!userData || !doctorData) return;
+        // console.log("dataaaa : ", {
+        //     userID: userData._id || "",
+        //     type: "out-going",
+        //     callType: "video",
+        //     roomId: `${Date.now()}`,
+        //     userName: `${userData?.name}`,
+        //     userImage: `${userData?.profileIMG}`,
+        //     doctorName: `${doctorData.name}`,
+        //     doctorImage: ` ${doctorData.profileImage}`,
+        //     bookingId: selectedBookingId,
+        // });
 
         dispatch(
             setVideoCall({
@@ -476,7 +491,7 @@ export default function DoctorChatNew() {
                         <div className="ml-auto flex gap-3">
 
 
-                            {contacts.filter((booking) => booking.consultationStatus === "pending").length > 0 && (
+                            {contacts.filter((booking) => booking.consultationStatus === "pending" && booking.bookingStatus === "booked").length > 0 && (
                                 <>
                                     <button
                                         className="flex justify-center gap-3 bg-teal-500 px-4 py-2 rounded-lg"
@@ -492,7 +507,8 @@ export default function DoctorChatNew() {
                                             <div className="bg-white p-6 rounded-lg w-96 space-y-4">
                                                 <h2 className="text-lg font-semibold">Select a Booking</h2>
                                                 <div className="space-y-2 max-h-64 overflow-y-auto">
-                                                    {contacts.filter((booking) => booking.consultationStatus === "pending")
+                                                    {contacts.filter((booking) => booking.consultationStatus === "pending" &&
+                                                        booking?.bookingStatus === "booked")
                                                         .map((booking) => (
                                                             <label
                                                                 key={`${booking.bookingId}-${booking.slotId?._id}`}

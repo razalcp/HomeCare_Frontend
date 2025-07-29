@@ -155,17 +155,9 @@ const UserSideDoctorDetails = () => {
             }
 
         } catch (error: any) {
-
-            toast.error(error.message)
+            toast.error(error.response.data.error)
+            setIsSubmitting(false)
         }
-        // Here you would make your API call
-        // console.log("Submitting review:", {
-        //     doctorId,
-        //     rating,
-        //     comment: review,
-        //     userId: userInfo?._id
-        // })
-
 
 
     }
