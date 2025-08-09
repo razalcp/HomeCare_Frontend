@@ -231,8 +231,11 @@ export default function DoctorChatNew() {
     const navigateVideoChat = () => {
         console.log("navigateVideoChat");
 
-        const contactBooking = contacts.find((contact) => contact._id === selectedContact?._id);
-        console.log("Selected Contact : ", contactBooking);
+
+        // const contactBooking = contacts.find((contact) => contact._id === selectedContact?._id);
+        const contactBooking = contacts.find((contact) => contact.bookingId === selectedBookingId);
+//         console.log("This is Selected Contact : ", contactBooking);
+// console.log("This is selected bookingId : ---> ",selectedBookingId);
 
         const bookingId: any = contactBooking?.bookingId || "";
         if (!userData || !doctorData) return;
@@ -250,12 +253,12 @@ export default function DoctorChatNew() {
 
         dispatch(
             setVideoCall({
-                userID: userData._id || "",
+                userID: contactBooking?._id || "",
                 type: "out-going",
                 callType: "video",
                 roomId: `${Date.now()}`,
-                userName: `${userData?.name}`,
-                userImage: `${userData?.profileIMG}`,
+                userName: `${contactBooking?.name}`,
+                userImage: `${contactBooking?.profileIMG}`,
                 doctorName: `${doctorData.name}`,
                 doctorImage: ` ${doctorData.profileImage}`,
                 bookingId: selectedBookingId,

@@ -23,16 +23,17 @@ const adminDepartmentServ = async (dept: String) => {
 }
 
 
-const getDepartments = async (page: number, limit: number) => {
+ const getDepartments = async (page: number, limit: number, search = "") => {
   try {
-    const departments = await adminApi.get('/getDepartments', {
-      params: { page, limit }
+    const departments = await adminApi.get("/getDepartments", {
+      params: { page, limit, search },
     });
     return departments;
   } catch (error) {
     throw error;
   }
 };
+
 
 
 const updateListUnlistServ = async (department: String) => {
@@ -61,16 +62,33 @@ const updateKycStatus = async (status: String, doctorId: String) => {
   }
 }
 
-const getPatientData = async (page: number, limit: number) => {
+// const getPatientData = async (page: number, limit: number) => {
+//   try {
+//     const response = await adminApi.get('/getPatients', {
+//       params: { page, limit }
+//     });
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+// services/admin/adminApi.ts
+
+ const getPatientData = async (
+  page: number,
+  limit: number,
+  search: string = ""
+) => {
   try {
-    const response = await adminApi.get('/getPatients', {
-      params: { page, limit }
+    const response = await adminApi.get("/getPatients", {
+      params: { page, limit, search },
     });
     return response.data;
   } catch (error) {
     throw error;
   }
 };
+
 
 
 const updatePatients = async (buttonName: String, id: string) => {

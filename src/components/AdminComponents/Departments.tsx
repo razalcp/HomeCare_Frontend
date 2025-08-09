@@ -1,25 +1,31 @@
 
-import React, { useState, useEffect } from "react";
-import { adminDepartmentServ, getDepartments, updateListUnlistServ } from "src/services/admin/adminApi";
+
+import React, { useState, useEffect, useRef } from "react";
 import Notiflix from "notiflix";
-import { editDepartmentServ } from "src/services/admin/adminApi";
+import {
+    adminDepartmentServ,
+    getDepartments,
+    updateListUnlistServ,
+    editDepartmentServ,
+} from "src/services/admin/adminApi";
 
 const Departments = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newDepartment, setNewDepartment] = useState("");
     const [departments, setDepartments] = useState([]);
-    const [allDepartments, setAllDepartments] = useState([]); // ✅ for duplicate check
+    const [allDepartments, setAllDepartments] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [editDepartmentId, setEditDepartmentId] = useState<string | null>(null);
     const [editDepartmentName, setEditDepartmentName] = useState("");
+    const [search, setSearch] = useState("");
 
+    const debounceRef = useRef<NodeJS.Timeout | null>(null);
     const departmentsPerPage = 5;
 
-    // ✅ Fetch paginated departments for display
-    const fetchDepartments = async (page: number) => {
+    const fetchDepartments = async (page: number, searchText = "") => {
         try {
-            const result = await getDepartments(page, departmentsPerPage);
+            const result = await getDepartments(page, departmentsPerPage, searchText);
             const { data, totalPages } = result.data;
             setDepartments(data);
             setTotalPages(totalPages);
@@ -28,47 +34,67 @@ const Departments = () => {
         }
     };
 
-    // ✅ Fetch all departments (unpaginated) for checking duplicates
     const fetchAllDepartments = async () => {
         try {
-            const result = await getDepartments(page, departmentsPerPage); // assuming this returns all if no pagination params passed
+            const result = await getDepartments(1, 1000);
             const { data } = result.data;
             setAllDepartments(data);
         } catch (error) {
-            console.error("Failed to fetch all departments for duplicate check");
+            console.error("Failed to fetch all departments");
         }
     };
 
     useEffect(() => {
-        fetchDepartments(currentPage);
+        fetchDepartments(currentPage, search);
     }, [currentPage]);
 
+
+
+    const isFirstRun = useRef(true);
+
     useEffect(() => {
-        fetchAllDepartments();
-    }, []);
+        if (isFirstRun.current) {
+            isFirstRun.current = false;
+            return; // skip on initial render
+        }
+
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+
+        debounceRef.current = setTimeout(() => {
+            if (currentPage === 1) {
+                fetchDepartments(1, search);
+            } else {
+                setCurrentPage(1); // this will trigger fetch through the [currentPage] effect
+            }
+            ;
+        }, 1000);
+
+        return () => {
+            if (debounceRef.current) clearTimeout(debounceRef.current);
+        };
+    }, [search]);
+
 
     const handleEditDepartment = async () => {
         if (editDepartmentName.trim()) {
+            const isDuplicate = allDepartments.some(
+                (dept: any) =>
+                    dept.departmentName.toLowerCase() === editDepartmentName.trim().toLowerCase() &&
+                    dept._id !== editDepartmentId
+            );
+
+            if (isDuplicate) {
+                Notiflix.Notify.failure("Department name already exists.");
+                return;
+            }
+
             try {
-                // Check for duplicate (excluding current item)
-                const isDuplicate = allDepartments.some(
-                    (dept: any) =>
-                        dept.departmentName.toLowerCase() === editDepartmentName.trim().toLowerCase() &&
-                        dept._id !== editDepartmentId
-                );
-
-                if (isDuplicate) {
-                    Notiflix.Notify.failure("Department name already exists.");
-                    return;
-                }
-                console.log(editDepartmentId!, editDepartmentName.trim());
-
                 await editDepartmentServ(editDepartmentId!, editDepartmentName.trim());
                 Notiflix.Notify.success("Department updated.");
                 setEditDepartmentId(null);
                 setEditDepartmentName("");
                 setIsModalOpen(false);
-                fetchDepartments(currentPage);
+                fetchDepartments(currentPage, search);
                 fetchAllDepartments();
             } catch (error) {
                 Notiflix.Notify.failure("Failed to update department.");
@@ -76,11 +102,11 @@ const Departments = () => {
         }
     };
 
-
     const handleAddDepartment = async () => {
         if (newDepartment.trim()) {
             const isDuplicate = allDepartments.some(
-                (dept: any) => dept.departmentName.toLowerCase() === newDepartment.trim().toLowerCase()
+                (dept: any) =>
+                    dept.departmentName.toLowerCase() === newDepartment.trim().toLowerCase()
             );
 
             if (isDuplicate) {
@@ -94,8 +120,8 @@ const Departments = () => {
                 setNewDepartment("");
                 setIsModalOpen(false);
                 setCurrentPage(1);
-                await fetchDepartments(1);
-                await fetchAllDepartments(); // ✅ update after add
+                await fetchDepartments(1, search);
+                await fetchAllDepartments();
             } catch (error) {
                 Notiflix.Notify.failure("Failed to add department.");
             }
@@ -112,15 +138,15 @@ const Departments = () => {
 
         Notiflix.Confirm.show(
             "Are you sure?",
-            `Do you want to ${isUnlist ? `Unlist` : `List`} ${clickedDepartment}?`,
+            `Do you want to ${isUnlist ? "Unlist" : "List"} ${clickedDepartment}?`,
             isUnlist ? "Yes, Unlist it!" : "Yes, List it!",
             "Cancel",
             async () => {
                 try {
                     await updateListUnlistServ(clickedDepartment);
                     Notiflix.Notify.success(`The ${clickedDepartment} department has been ${isUnlist ? "Unlisted" : "Listed"} successfully.`);
-                    fetchDepartments(currentPage);
-                    fetchAllDepartments(); // ✅ also update full list
+                    fetchDepartments(currentPage, search);
+                    fetchAllDepartments();
                 } catch (error) {
                     Notiflix.Notify.failure("Something went wrong while updating.");
                 }
@@ -140,6 +166,30 @@ const Departments = () => {
                 </button>
             </div>
 
+            {/* Search bar */}
+            <div className="mb-4 flex gap-2">
+                <input
+                    type="text"
+                    placeholder="Search department"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full border px-3 py-2 rounded"
+                />
+                {search && (
+                    <button
+                        onClick={() => {
+                            setSearch("");
+                            setCurrentPage(1);
+                            fetchDepartments(1, "");
+                        }}
+                        className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                    >
+                        Clear
+                    </button>
+                )}
+            </div>
+
+            {/* Table */}
             <table className="w-full border-collapse border border-gray-300">
                 <thead>
                     <tr className="bg-gray-200">
@@ -158,14 +208,12 @@ const Departments = () => {
                                 <td className={`border p-3 ${department.isListed ? "text-green-600" : "text-red-600"}`}>
                                     {department.isListed ? "Listed" : "Unlisted"}
                                 </td>
-
                                 <td className="border p-3 space-x-2">
                                     <button
                                         onClick={(e) => handleClick(department.departmentName, e.currentTarget.innerText)}
                                         className={`w-20 px-4 py-2 text-white font-semibold rounded ${department.isListed
                                             ? "bg-red-500 hover:bg-red-600"
-                                            : "bg-green-500 hover:bg-green-600"
-                                            }`}
+                                            : "bg-green-500 hover:bg-green-600"}`}
                                     >
                                         {department.isListed ? "Unlist" : "List"}
                                     </button>
@@ -180,15 +228,12 @@ const Departments = () => {
                                         Edit
                                     </button>
                                 </td>
-
-
-
                             </tr>
                         ))
                     ) : (
                         <tr>
                             <td colSpan={4} className="border p-3 text-center text-gray-500">
-                                No departments added yet
+                                No departments found.
                             </td>
                         </tr>
                     )}
@@ -201,8 +246,9 @@ const Departments = () => {
                         <button
                             key={number}
                             onClick={() => setCurrentPage(number)}
-                            className={`px-3 py-1 rounded ${number === currentPage ? "bg-teal-600 text-white" : "bg-gray-200 hover:bg-gray-300"
-                                }`}
+                            className={`px-3 py-1 rounded ${number === currentPage
+                                ? "bg-teal-600 text-white"
+                                : "bg-gray-200 hover:bg-gray-300"}`}
                         >
                             {number}
                         </button>
@@ -210,34 +256,6 @@ const Departments = () => {
                 </div>
             )}
 
-            {/* {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-                        <h3 className="text-lg font-semibold mb-4">Add New Department</h3>
-                        <input
-                            type="text"
-                            value={newDepartment}
-                            onChange={(e) => setNewDepartment(e.target.value)}
-                            className="w-full border p-2 rounded-md mb-4"
-                            placeholder="Enter department name"
-                        />
-                        <div className="flex justify-end space-x-2">
-                            <button
-                                onClick={() => setIsModalOpen(false)}
-                                className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleAddDepartment}
-                                className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
-                            >
-                                Add
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )} */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
@@ -277,9 +295,9 @@ const Departments = () => {
                     </div>
                 </div>
             )}
-
         </div>
     );
 };
 
 export default Departments;
+

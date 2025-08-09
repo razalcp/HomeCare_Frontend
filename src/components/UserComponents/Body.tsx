@@ -256,7 +256,7 @@ const Body = () => {
 
 
             {/* Services Grid */}
-            <section className="container py-16">
+            {/* <section className="container py-16">
                 <div className="text-center mb-12">
                     <h2 className="text-3xl font-bold mb-4">Quality health made with homecare simple</h2>
                     <p className="text-gray-600 max-w-2xl mx-auto">
@@ -276,7 +276,32 @@ const Body = () => {
                         </Card>
                     ))}
                 </div>
+            </section> */}
+
+            <section className="container mx-auto py-16 px-4">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl font-bold mb-4">
+                        Quality health made with homecare simple
+                    </h2>
+                    <p className="text-gray-600 max-w-2xl mx-auto">
+                        Access quality healthcare services from the comfort of your home
+                    </p>
+                </div>
+                <div className="grid md:grid-cols-3 gap-6 justify-items-center">
+                    {services.map((service, index) => (
+                        <Card key={index} className="text-center w-full max-w-lg">
+                            <CardContent>
+                                <div className="inline-flex p-3 rounded-lg bg-blue-50 mb-4">
+                                    {service.icon}
+                                </div>
+                                <h3 className="font-semibold mb-2">{service.title}</h3>
+                                <p className="text-sm text-gray-600">{service.description}</p>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
             </section>
+
         </main>
     )
 }

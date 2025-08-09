@@ -38,25 +38,29 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   }, []);
 
   const createSocket = (userId: string) => {
+    console.log("createSocket worked now");
+    
     if (socketRef.current) {
       socketRef.current.disconnect();
     }
     // console.log(userId , "userId" , socketRef.current, "socketRef" )
 
-    // socketRef.current = io("http://localhost:3001", {
-    //   withCredentials: true,
-    //   transports: ["websocket"],
-    //   query: { userId },
-    // });
-    console.log("Inside createSocket ",userId);
-    
-    socketRef.current = io("https://homecare.razal.live", {
+    socketRef.current = io("http://localhost:3001", {
       withCredentials: true,
       transports: ["websocket"],
       query: { userId },
     });
+    console.log("Inside createSocket ",userId);
+    
+    // socketRef.current = io("https://homecare.razal.live", {
+    //   withCredentials: true,
+    //   transports: ["websocket"],
+    //   query: { userId },
+    // });
 
     socketRef.current.on("connect", () => {
+      console.log("socket connected from frontend");
+      
       setIsConnected(true);
       setSocket(socketRef.current);
     });
