@@ -70,6 +70,14 @@ const BookingHistory = () => {
             }
         );
     };
+    function generateRandomId(length = 8) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
 
     // Enhanced prescription PDF generator
     const generatePrescriptionPDF = async (prescriptionData: any, bookingData: any) => {
@@ -120,8 +128,8 @@ const BookingHistory = () => {
 
         // Prescription ID and Booking Info
         pdf.setFontSize(10);
-        pdf.text(`Prescription ID: ${prescriptionData._id || prescriptionData.id}`, pageWidth - 20, yPosition, { align: 'right' });
-        pdf.text(`Booking ID: ${bookingData._id}`, pageWidth - 20, yPosition + 8, { align: 'right' });
+        pdf.text(`Prescription ID: ${generateRandomId(8) || generateRandomId(8)}`, pageWidth - 20, yPosition, { align: 'right' });
+        pdf.text(`Booking ID: ${generateRandomId(8)}`, pageWidth - 20, yPosition + 8, { align: 'right' });
 
         // Divider Line
         yPosition += 40;
@@ -141,7 +149,7 @@ const BookingHistory = () => {
         yPosition += 20;
         pdf.setFontSize(10);
         pdf.setFont('helvetica', 'normal');
-        pdf.text(`Patient ID: ${prescriptionData.userId || userInfo._id}`, 20, yPosition);
+        pdf.text(`Patient ID: ${generateRandomId(8) || generateRandomId(8)}`, 20, yPosition);
         pdf.text(`Consultation Date: ${new Date(bookingData.slotId.date).toLocaleDateString()}`, 20, yPosition + 8);
         pdf.text(`Prescribed on: ${new Date(prescriptionData.createdAt).toLocaleDateString()}`, 20, yPosition + 16);
 
@@ -230,7 +238,7 @@ const BookingHistory = () => {
         pdf.text('Important: Take medications as prescribed. Contact your doctor if you experience any adverse effects.', 20, yPosition);
         pdf.text('This prescription is valid for 30 days from the date of issue.', 20, yPosition + 8);
 
-   
+
 
         // Generate filename
         const filename = `Prescription_${bookingData._id}_${new Date().toISOString().split('T')[0]}.pdf`;

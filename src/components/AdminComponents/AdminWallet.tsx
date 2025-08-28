@@ -219,7 +219,7 @@ const AdminWallet = () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       fetchWallet(currentPage, searchTerm, filterType);
-    }, 500);
+    }, 1000);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };

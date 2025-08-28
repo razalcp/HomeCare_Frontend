@@ -33,7 +33,7 @@ const DoctorWallet = () => {
     const fetchWallet = async () => {
       try {
         setLoading(true);
-        const res :any = await doctorApi.get(`/getWalletData/${doctorInfo._id}`, {
+        const res: any = await doctorApi.get(`/getWalletData/${doctorInfo._id}`, {
           params: { page: currentPage, limit: transactionsPerPage }
         });
         setWallet(res.data.wallet);
